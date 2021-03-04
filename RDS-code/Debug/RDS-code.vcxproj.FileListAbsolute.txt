@@ -1,0 +1,2 @@
+J:\VSProjects\RDS\RDS-code\Debug\RDS-code.exe
+J:\VSProjects\RDS\RDS-code\Debug\RDS-code.pdb

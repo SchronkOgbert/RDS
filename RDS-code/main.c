@@ -3,7 +3,9 @@
 
 int main()
 {
-	printf("Hello, world!\n");
+	int n;
+	scanf("%d", &n);
+	printf("%d", digit_prod(n));
 
 	return 0;
 }

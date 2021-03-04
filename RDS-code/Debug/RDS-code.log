@@ -1,0 +1,5 @@
+﻿  main.c
+  utilities.c
+J:\VSProjects\RDS\RDS-code\utilities.c(41,25): warning C4028: formal parameter 1 different from declaration
+  Generating Code...
+  RDS-code.vcxproj -> J:\VSProjects\RDS\RDS-code\Debug\RDS-code.exe

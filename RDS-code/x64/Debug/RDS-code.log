@@ -1,5 +1,4 @@
-﻿  main.c
-C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\main.c(7,2): error C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  utilities.c
-C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\utilities.c(41,25): warning C4028: formal parameter 1 different from declaration
-  Generating Code...
+﻿  core.c
+J:\VSProjects\RDS\RDS-code\core.c(31,15): warning C4013: 'mkdir' undefined; assuming extern returning int
+J:\VSProjects\RDS\RDS-code\core.c(82,25): warning C4028: formal parameter 1 different from declaration
+  RDS-code.vcxproj -> J:\VSProjects\RDS\RDS-code\x64\Debug\RDS-code.exe

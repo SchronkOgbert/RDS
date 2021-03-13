@@ -1,12 +1,10 @@
-#include <stdio.h>
-#include "utilities.h"
+#include "core.h"
 
 int main()
 {
-	int n;
-	scanf("%d", &n);
-	printf("%d", digit_prod(n));
-	//dfvgasy
+	setup();
+
+	//system("pause");
 
 	return 0;
 }

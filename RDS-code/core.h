@@ -5,12 +5,15 @@
 #define BILLS "db/facturi.csv"
 #define TEMPLATES "db/abonamente.csv"
 #define WORKING_FOLDER "db"
+#define CLIENTS "db/clienti.csv"
 
 //needed files
 FILE* bills;
 
 //setup functions
 void setup();
+void check_working_folder();
+void check_files();
 int create_dir(char* dir_name);
 int check_file(char* filename);
 void create_csv_file(char* filename, int argc, char* argv[]);
@@ -24,10 +27,6 @@ char* search_bills(long CNP);
 int check_cnp(long CNP);
 
 //utility functions
-int gcd(int x, int y);
-int scm(int x, int y);
-int digit_prod(int x);
-int no_digits(int x);
 char* int_to_string(int x);
 char* long_to_string(long x);
 long string_to_long(char* string);

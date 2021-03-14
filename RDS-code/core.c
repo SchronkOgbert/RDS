@@ -2,34 +2,12 @@
 
 void setup()
 {	
-	{
-		//this block checks if the working folder exists
-		//...should have placed it in a function
-		struct stat sb;
-		if (stat(WORKING_FOLDER, &sb) == 0 && S_ISDIR(sb.st_mode))
-		{
-			printf("Successfully opened %s directory...\n", WORKING_FOLDER);
-		}
-		else
-		{
-			printf("No file directory found, creating directory...\n");
-			create_dir(WORKING_FOLDER);
-			printf("Success!...\n");
-		}
-	}
+	//checks if the folder exists
+	check_working_folder();
 	//this part checks if the files we're gonna write actually exist
 	//if they don't, they get created
-	if (!check_file(TEMPLATES))
-	{
-		char* columns[] = { "Nume abonament", "Tip abonament", "Durata abonament", "Cost abonament" };
-		create_csv_file(TEMPLATES, 4, columns);
-		generate_templates();
-	}
-	if (!check_file(BILLS))
-	{
-		char* columns[] = { "Nume", "Prenume", "Adresa", "CNP", "Data emiterii", "Suma" };
-		create_csv_file(BILLS, 6, columns);		
-	}
+	check_files();
+	//for speed, this will stay open while the program runs
 	bills = fopen(BILLS, "a");
 }
 
@@ -44,7 +22,6 @@ int create_dir(char* dir_name)
 	}
 	printf("Unable to create directory %s...\n", dir_name);
 	exit(-1);
-	return 0;
 }
 
 int check_file(char* filename)
@@ -57,6 +34,41 @@ int check_file(char* filename)
 	}
 	printf("File %s does not exist...\n", filename);
 	return 0;
+}
+
+void check_files()
+{
+	if (!check_file(CLIENTS))
+	{
+		char* columns[] = { "Nume", "Prenume", "CNP" };
+		create_csv_file(CLIENTS, 3, columns);
+	}
+	if (!check_file(TEMPLATES))
+	{
+		char* columns[] = { "Nume abonament", "Tip abonament", "Durata abonament", "Cost abonament" };
+		create_csv_file(TEMPLATES, 4, columns);
+		generate_templates();
+	}
+	if (!check_file(BILLS))
+	{
+		char* columns[] = { "Nume", "Prenume", "Adresa", "CNP", "Data emiterii", "Suma" };
+		create_csv_file(BILLS, 6, columns);
+	}
+}
+
+void check_working_folder()
+{
+	struct stat sb;
+	if (stat(WORKING_FOLDER, &sb) == 0 && S_ISDIR(sb.st_mode))
+	{
+		printf("Successfully opened %s directory...\n", WORKING_FOLDER);
+	}
+	else
+	{
+		printf("No file directory found, creating directory...\n");
+		create_dir(WORKING_FOLDER);
+		printf("Success!...\n");
+	}
 }
 
 void create_csv_file(char* filename, int argc, char* argv[])
@@ -143,34 +155,6 @@ int check_cnp(long CNP)
 	return 0;
 }
 
-int gcd(int x, int y)
-{
-	int r;
-	while (y)
-	{
-		r = x % y;
-		x = y;
-		y = r;
-	}
-	return x;
-}
-
-int scm(int x, int y)
-{
-	return (x * y) / gcd(x, y);
-}
-
-int no_digits(int x)
-{
-	int res = 0;
-	while (x)
-	{
-		res++;
-		x /= 10;
-	}
-	return res;
-}
-
 char* int_to_string(int x)
 {
 	char* res = malloc(21);
@@ -222,17 +206,6 @@ void delete_string_array(int elc, char* v[])
 		}
 		free(v[i]);
 	}
-}
-
-int digit_prod(unsigned x)
-{
-	unsigned res = 1;
-	while (x)
-	{
-		res *= (x % 10);
-		x /= 10;
-	}
-	return res;
 }
 
 char* getfield(char* line, int num)

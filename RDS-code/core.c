@@ -8,6 +8,7 @@ void setup()
 	//if they don't, they get created
 	check_files();
 	//for speed, this will stay open while the program runs
+	get_people();
 	bills = fopen(BILLS, "a");
 }
 
@@ -54,6 +55,26 @@ void check_files()
 		char* columns[] = { "Nume", "Prenume", "Adresa", "CNP", "Data emiterii", "Suma" };
 		create_csv_file(BILLS, 6, columns);
 	}
+}
+
+void get_people()
+{
+	FILE* file = fopen(CLIENTS, "r");
+	char buffer[256];
+	fgets(buffer, 256, file);
+	char name[41];
+	char first_name[41];
+	long cnp;
+	while (fgets(buffer, 256, file))
+	{
+		strcpy(name, get_field(buffer, 0));
+		strcpy(first_name, get_field(buffer, 1));
+		cnp = string_to_long(get_field(buffer, 2));
+		people = realloc(people, sizeof(person) * (people_count + 1));
+		people_count++;
+		people[people_count - 1] = person_init(name, first_name, cnp);
+	}
+	fclose(file);
 }
 
 void check_working_folder()
@@ -114,6 +135,11 @@ void prepare_quit()
 	{
 		fclose(bills);
 	}
+	for (int i = 0; i < people_count; i++)
+	{
+		free(people[i]);
+	}
+	free(people);
 }
 
 void append_to_csv(FILE* file, int argc, char* argv[])
@@ -132,7 +158,7 @@ void append_to_csv(FILE* file, int argc, char* argv[])
 
 char* search_bills(long CNP)
 {
-	return NULL;
+	
 }
 
 int check_cnp(long CNP)
@@ -145,7 +171,7 @@ int check_cnp(long CNP)
 		while (fgets(buffer, 256, file))
 		{
 			char* tmp = _strdup(buffer);
-			if (CNP == string_to_long(getfield(buffer, 3)))
+			if (CNP == string_to_long(get_field(buffer, 3)))
 			{
 				return 1;
 			}
@@ -188,7 +214,7 @@ char* long_to_string(long x)
 long string_to_long(char* string)
 {
 	long res = 0;
-	for (int i = 0; string[i] != '\0'; i++)
+	for (int i = 0; string[i] != '\0' && string[i] != '\n'; i++)
 	{
 		res = res * 10 + (string[i] - '0');
 	}
@@ -208,13 +234,15 @@ void delete_string_array(int elc, char* v[])
 	}
 }
 
-char* getfield(char* line, int num)
+char* get_field(char* line, int num)
 {
-	char* token = strtok(line, ",");
+	char buffer[256];
+	strcpy(buffer, line);
+	char* token = strtok(buffer, ",");
 	int i = 0;
 	/* walk through other tokens */
 	while (token != NULL) {
-		if (i == 3)
+		if (i == num)
 		{
 			return token;
 		}

@@ -1,1 +1,9 @@
 Nume abonament,Tip abonament,Durata abonament,Cost abonament
+Basic,Telefon,1,5
+Basic,Telefon,2,5
+Premium,Telefon,1,10
+Premium,Telefon,2,10
+Basic,Televiziune,1,10
+Basic,Televiziune,2,10
+Premium,Televiziune,1,20
+Premium,Televiziune,2,20

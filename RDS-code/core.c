@@ -1,27 +1,15 @@
 #include "core.h"
 
 void setup()
-{
-	char* folder;
-	//folder = "C:\\Users\\SaMaN\\Desktop\\Ppln";
-	folder = "db";
-	struct stat sb;
-
-	if (stat(folder, &sb) == 0 && S_ISDIR(sb.st_mode)) 
-	{
-		printf("Successfully opened %s directory...\n", folder);				
-	}
-	else 
-	{
-		printf("No file directory found, creating directory...\n");
-		create_dir(folder);
-	}
-	if (!check_file("db/abonamente.csv"))
-	{
-		char* columns[] = { "Nume abonament", "Tip abonament", "Durata abonament", "Cost abonament" };
-		create_csv_file("db/abonamente.csv", 4, columns);
-		//delete_string_array(4, columns);
-	}
+{	
+	//checks if the folder exists
+	check_working_folder();
+	//this part checks if the files we're gonna write actually exist
+	//if they don't, they get created
+	check_files();
+	//for speed, this will stay open while the program runs
+	get_people();
+	bills = fopen(BILLS, "a");
 }
 
 int create_dir(char* dir_name)
@@ -35,7 +23,6 @@ int create_dir(char* dir_name)
 	}
 	printf("Unable to create directory %s...\n", dir_name);
 	exit(-1);
-	return 0;
 }
 
 int check_file(char* filename)
@@ -50,6 +37,61 @@ int check_file(char* filename)
 	return 0;
 }
 
+void check_files()
+{
+	if (!check_file(CLIENTS))
+	{
+		char* columns[] = { "Nume", "Prenume", "CNP" };
+		create_csv_file(CLIENTS, 3, columns);
+	}
+	if (!check_file(TEMPLATES))
+	{
+		char* columns[] = { "Nume abonament", "Tip abonament", "Durata abonament", "Cost abonament" };
+		create_csv_file(TEMPLATES, 4, columns);
+		generate_templates();
+	}
+	if (!check_file(BILLS))
+	{
+		char* columns[] = { "Nume", "Prenume", "Adresa", "CNP", "Data emiterii", "Suma" };
+		create_csv_file(BILLS, 6, columns);
+	}
+}
+
+void get_people()
+{
+	FILE* file = fopen(CLIENTS, "r");
+	char buffer[256];
+	fgets(buffer, 256, file);
+	char name[41];
+	char first_name[41];
+	long cnp;
+	while (fgets(buffer, 256, file))
+	{
+		strcpy(name, get_field(buffer, 0));
+		strcpy(first_name, get_field(buffer, 1));
+		cnp = string_to_long(get_field(buffer, 2));
+		people = realloc(people, sizeof(person) * (people_count + 1));
+		people_count++;
+		people[people_count - 1] = person_init(name, first_name, cnp);
+	}
+	fclose(file);
+}
+
+void check_working_folder()
+{
+	struct stat sb;
+	if (stat(WORKING_FOLDER, &sb) == 0 && S_ISDIR(sb.st_mode))
+	{
+		printf("Successfully opened %s directory...\n", WORKING_FOLDER);
+	}
+	else
+	{
+		printf("No file directory found, creating directory...\n");
+		create_dir(WORKING_FOLDER);
+		printf("Success!...\n");
+	}
+}
+
 void create_csv_file(char* filename, int argc, char* argv[])
 {
 	printf("Creating %s...\n", filename);
@@ -62,30 +104,140 @@ void create_csv_file(char* filename, int argc, char* argv[])
 	fclose(file);
 }
 
-int gcd(int x, int y)
+void generate_templates()
 {
-	int r;
-	while (y)
+	FILE* file = fopen(TEMPLATES, "a");
+	if (file)
 	{
-		r = x % y;
-		x = y;
-		y = r;
+		char buffer[128] = "Basic,Telefon,1,5\n";
+		strcat(buffer, "Basic,Telefon,2,5\n");
+		strcat(buffer, "Premium,Telefon,1,10\n");
+		strcat(buffer, "Premium,Telefon,2,10\n");
+		fprintf(file, "%s", buffer);
+		strcpy(buffer, "Basic,Televiziune,1,10\n");
+		strcat(buffer, "Basic,Televiziune,2,10\n");
+		strcat(buffer, "Premium,Televiziune,1,20\n");
+		strcat(buffer, "Premium,Televiziune,2,20\n");
+		fprintf(file, "%s", buffer);
+		fclose(file);
 	}
-	return x;
+	else
+	{
+		printf("Failed to create templates, exit...\n");
+		system("pause");
+		exit(-1);
+	}
 }
 
-int scm(int x, int y)
+void prepare_quit()
 {
-	return (x * y) / gcd(x, y);
+	if (bills)
+	{
+		fclose(bills);
+	}
+	for (int i = 0; i < people_count; i++)
+	{
+		free(people[i]);
+	}
+	free(people);
 }
 
-int no_digits(int x)
+void append_to_csv(FILE* file, int argc, char* argv[])
 {
-	int res = 0;
+	//the cnp should be the fourth el in the array
+	if (!bills)
+	{
+		bills = fopen(BILLS, "a");
+	}
+	for (int i = 0; i < argc - 1; i++)
+	{
+		fprintf(file, "%s,", argv[i]);
+	}
+	fprintf(file, "%s\n", argv[argc - 1]);
+}
+
+char* search_bills(long CNP)
+{
+	FILE* file = fopen(BILLS, "r");
+	char* res = NULL;
+	char buffer[256];
+	if (file)
+	{
+		fgets(buffer, 256, file);
+		while (fgets(buffer, 256, file))
+		{
+			char raw_cnp[21];
+			strcpy(raw_cnp, get_field(buffer, 3));
+			if (CNP == string_to_long(raw_cnp))
+			{
+				if (res)
+				{
+					free(res);					
+				}
+				res = malloc(strlen(buffer) + 1);
+				strcpy(res, buffer);
+			}
+		}
+	}
+	return res;
+}
+
+int check_cnp(long CNP)
+{
+	FILE* file = fopen(CLIENTS, "r");
+	if (file)
+	{
+		char buffer[256];
+		fgets(buffer, 256, file);
+		while (fgets(buffer, 256, file))
+		{
+			char* tmp = _strdup(buffer);
+			if (CNP == string_to_long(get_field(buffer, 2)))
+			{
+				return 1;
+			}
+			free(tmp);
+		}
+	}
+	return 0;
+}
+
+char* int_to_string(int x)
+{
+	char* res = malloc(21);
+	char buffer[21] = "";
 	while (x)
 	{
-		res++;
+		buffer[strlen(buffer)] = (x % 10) + '0';
+		buffer[strlen(buffer) + 1] = '\0';
 		x /= 10;
+	}
+	_strrev(buffer);
+	strcpy(res, buffer);
+	return res;
+}
+
+char* long_to_string(long x)
+{
+	char* res = malloc(21);
+	char buffer[21] = "";
+	while (x)
+	{
+		buffer[strlen(buffer)] = (x % 10) + '0';
+		buffer[strlen(buffer) + 1] = '\0';
+		x /= 10;
+	}
+	_strrev(buffer);
+	strcpy(res, buffer);
+	return res;
+}
+
+long string_to_long(char* string)
+{
+	long res = 0;
+	for (int i = 0; string[i] != '\0' && string[i] != '\n'; i++)
+	{
+		res = res * 10 + (string[i] - '0');
 	}
 	return res;
 }
@@ -94,17 +246,29 @@ void delete_string_array(int elc, char* v[])
 {
 	for (int i = 0; i < elc; i++)
 	{
-		free(v + i);
+		if (!v[i])
+		{
+			printf("Ivalid memory location...\n");
+			continue;
+		}
+		free(v[i]);
 	}
 }
 
-int digit_prod(unsigned x)
+char* get_field(char* line, int num)
 {
-	unsigned res = 1;
-	while (x)
-	{
-		res *= (x % 10);
-		x /= 10;
+	char buffer[256];
+	strcpy(buffer, line);
+	char* token = strtok(buffer, ",");
+	int i = 0;
+	/* walk through other tokens */
+	while (token != NULL) {
+		if (i == num)
+		{
+			return token;
+		}
+		token = strtok(NULL, ",");
+		i++;
 	}
-	return res;
+	return NULL;
 }

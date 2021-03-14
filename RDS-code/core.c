@@ -19,18 +19,18 @@ void setup()
 	}
 	//this part checks if the files we're gonna write actually exist
 	//if they don't, they get created
-	if (!check_file(SUBSCRIPTIONS))
+	if (!check_file(TEMPLATES))
 	{
 		char* columns[] = { "Nume abonament", "Tip abonament", "Durata abonament", "Cost abonament" };
-		create_csv_file(SUBSCRIPTIONS, 4, columns);
-		subscriptions = fopen(SUBSCRIPTIONS, "a");
+		create_csv_file(TEMPLATES, 4, columns);
+		generate_templates();
 	}
 	if (!check_file(BILLS))
 	{
 		char* columns[] = { "Nume", "Prenume", "Adresa", "CNP", "Data emiterii", "Suma" };
-		create_csv_file(BILLS, 6, columns);
-		bills = fopen(BILLS, "a");
+		create_csv_file(BILLS, 6, columns);		
 	}
+	bills = fopen(BILLS, "a");
 }
 
 int create_dir(char* dir_name)
@@ -71,12 +71,33 @@ void create_csv_file(char* filename, int argc, char* argv[])
 	fclose(file);
 }
 
+void generate_templates()
+{
+	FILE* file = fopen(TEMPLATES, "a");
+	if (file)
+	{
+		char buffer[128] = "Basic,Telefon,1,5\n";
+		strcat(buffer, "Basic,Telefon,2,5\n");
+		strcat(buffer, "Premium,Telefon,1,10\n");
+		strcat(buffer, "Premium,Telefon,2,10\n");
+		fprintf(file, "%s", buffer);
+		strcpy(buffer, "Basic,Televiziune,1,10\n");
+		strcat(buffer, "Basic,Televiziune,2,10\n");
+		strcat(buffer, "Premium,Televiziune,1,20\n");
+		strcat(buffer, "Premium,Televiziune,2,20\n");
+		fprintf(file, "%s", buffer);
+		fclose(file);
+	}
+	else
+	{
+		printf("Failed to create templates, exit...\n");
+		system("pause");
+		exit(-1);
+	}
+}
+
 void prepare_quit()
 {
-	if (subscriptions)
-	{
-		fclose(subscriptions);
-	}
 	if (bills)
 	{
 		fclose(bills);
@@ -85,11 +106,41 @@ void prepare_quit()
 
 void append_to_csv(FILE* file, int argc, char* argv[])
 {
+	//the cnp should be the fourth el in the array
+	if (!bills)
+	{
+		bills = fopen(BILLS, "a");
+	}
 	for (int i = 0; i < argc - 1; i++)
 	{
 		fprintf(file, "%s,", argv[i]);
 	}
 	fprintf(file, "%s\n", argv[argc - 1]);
+}
+
+char* search_bills(long CNP)
+{
+	return NULL;
+}
+
+int check_cnp(long CNP)
+{
+	FILE* file = fopen(BILLS, "r");
+	if (file)
+	{
+		char buffer[256];
+		fgets(buffer, 256, file);
+		while (fgets(buffer, 256, file))
+		{
+			char* tmp = _strdup(buffer);
+			if (CNP == string_to_long(getfield(buffer, 3)))
+			{
+				return 1;
+			}
+			free(tmp);
+		}
+	}
+	return 0;
 }
 
 int gcd(int x, int y)
@@ -182,4 +233,20 @@ int digit_prod(unsigned x)
 		x /= 10;
 	}
 	return res;
+}
+
+char* getfield(char* line, int num)
+{
+	char* token = strtok(line, ",");
+	int i = 0;
+	/* walk through other tokens */
+	while (token != NULL) {
+		if (i == 3)
+		{
+			return token;
+		}
+		token = strtok(NULL, ",");
+		i++;
+	}
+	return NULL;
 }

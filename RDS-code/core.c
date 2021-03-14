@@ -158,12 +158,33 @@ void append_to_csv(FILE* file, int argc, char* argv[])
 
 char* search_bills(long CNP)
 {
-	
+	FILE* file = fopen(BILLS, "r");
+	char* res = NULL;
+	char buffer[256];
+	if (file)
+	{
+		fgets(buffer, 256, file);
+		while (fgets(buffer, 256, file))
+		{
+			char raw_cnp[21];
+			strcpy(raw_cnp, get_field(buffer, 3));
+			if (CNP == string_to_long(raw_cnp))
+			{
+				if (res)
+				{
+					free(res);					
+				}
+				res = malloc(strlen(buffer) + 1);
+				strcpy(res, buffer);
+			}
+		}
+	}
+	return res;
 }
 
 int check_cnp(long CNP)
 {
-	FILE* file = fopen(BILLS, "r");
+	FILE* file = fopen(CLIENTS, "r");
 	if (file)
 	{
 		char buffer[256];
@@ -171,7 +192,7 @@ int check_cnp(long CNP)
 		while (fgets(buffer, 256, file))
 		{
 			char* tmp = _strdup(buffer);
-			if (CNP == string_to_long(get_field(buffer, 3)))
+			if (CNP == string_to_long(get_field(buffer, 2)))
 			{
 				return 1;
 			}

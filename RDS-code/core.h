@@ -15,6 +15,7 @@
 FILE* bills;
 person** people;
 int people_count;
+char* return_buffer;
 
 //setup functions
 void setup();

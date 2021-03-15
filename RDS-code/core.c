@@ -131,6 +131,10 @@ void generate_templates()
 
 void prepare_quit()
 {
+	if (return_buffer)
+	{
+		free(return_buffer);
+	}
 	if (bills)
 	{
 		fclose(bills);
@@ -159,44 +163,34 @@ void append_to_csv(FILE* file, int argc, char* argv[])
 char* search_bills(long CNP)
 {
 	FILE* file = fopen(BILLS, "r");
-	char* res = NULL;
 	char buffer[256];
 	if (file)
 	{
 		fgets(buffer, 256, file);
 		while (fgets(buffer, 256, file))
 		{
-			char raw_cnp[21];
-			strcpy(raw_cnp, get_field(buffer, 3));
-			if (CNP == string_to_long(raw_cnp))
+			if (CNP == string_to_long(get_field(buffer, 3)))
 			{
-				if (res)
+				if (return_buffer)
 				{
-					free(res);					
+					free(return_buffer);					
 				}
-				res = malloc(strlen(buffer) + 1);
-				strcpy(res, buffer);
+				return_buffer = malloc(strlen(buffer) + 1);
+				strcpy(return_buffer, buffer);
 			}
 		}
 	}
-	return res;
+	fclose(file);
+	return return_buffer;
 }
 
 int check_cnp(long CNP)
 {
-	FILE* file = fopen(CLIENTS, "r");
-	if (file)
+	for (int i = 0; i < people_count; i++)
 	{
-		char buffer[256];
-		fgets(buffer, 256, file);
-		while (fgets(buffer, 256, file))
+		if (people[i]->cnp == CNP)
 		{
-			char* tmp = _strdup(buffer);
-			if (CNP == string_to_long(get_field(buffer, 2)))
-			{
-				return 1;
-			}
-			free(tmp);
+			return 1;
 		}
 	}
 	return 0;
@@ -204,7 +198,6 @@ int check_cnp(long CNP)
 
 char* int_to_string(int x)
 {
-	char* res = malloc(21);
 	char buffer[21] = "";
 	while (x)
 	{
@@ -213,13 +206,17 @@ char* int_to_string(int x)
 		x /= 10;
 	}
 	_strrev(buffer);
-	strcpy(res, buffer);
-	return res;
+	if (return_buffer)
+	{
+		free(return_buffer);
+	}
+	return_buffer = malloc(strlen(buffer) + 1);
+	strcpy(return_buffer, buffer);
+	return return_buffer;
 }
 
 char* long_to_string(long x)
 {
-	char* res = malloc(21);
 	char buffer[21] = "";
 	while (x)
 	{
@@ -228,8 +225,13 @@ char* long_to_string(long x)
 		x /= 10;
 	}
 	_strrev(buffer);
-	strcpy(res, buffer);
-	return res;
+	if (return_buffer)
+	{
+		free(return_buffer);
+	}
+	return_buffer = malloc(strlen(buffer) + 1);
+	strcpy(return_buffer, buffer);
+	return return_buffer;
 }
 
 long string_to_long(char* string)
@@ -265,7 +267,13 @@ char* get_field(char* line, int num)
 	while (token != NULL) {
 		if (i == num)
 		{
-			return token;
+			if (return_buffer)
+			{
+				free(return_buffer);
+			}
+			return_buffer = malloc(strlen(token) + 1);
+			strcpy(return_buffer, token);
+			return return_buffer;
 		}
 		token = strtok(NULL, ",");
 		i++;

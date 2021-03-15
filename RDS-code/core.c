@@ -213,7 +213,6 @@ char* int_to_string(int x)
 
 char* long_to_string(long x)
 {
-	char* res = malloc(21);
 	char buffer[21] = "";
 	while (x)
 	{
@@ -222,8 +221,13 @@ char* long_to_string(long x)
 		x /= 10;
 	}
 	_strrev(buffer);
-	strcpy(res, buffer);
-	return res;
+	if (return_buffer)
+	{
+		free(return_buffer);
+	}
+	return_buffer = malloc(strlen(buffer) + 1);
+	strcpy(return_buffer, buffer);
+	return return_buffer;
 }
 
 long string_to_long(char* string)

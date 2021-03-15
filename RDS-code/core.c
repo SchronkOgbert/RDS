@@ -149,15 +149,22 @@ void prepare_quit()
 void append_to_csv(FILE* file, int argc, char* argv[])
 {
 	//the cnp should be the fourth el in the array
-	if (!bills)
+	if (bills == NULL)
 	{
 		bills = fopen(BILLS, "a");
 	}
-	for (int i = 0; i < argc - 1; i++)
+	if (bills)
 	{
-		fprintf(file, "%s,", argv[i]);
+		for (int i = 0; i < argc - 1; i++)
+		{
+			fprintf(file, "%s,", argv[i]);
+		}
+		fprintf(file, "%s\n", argv[argc - 1]);
 	}
-	fprintf(file, "%s\n", argv[argc - 1]);
+	else
+	{
+		printf("failed to open file...\n");
+	}
 }
 
 char* search_bills(long CNP)

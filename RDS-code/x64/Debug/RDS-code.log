@@ -1,4 +1,2 @@
-﻿  core.c
-J:\VSProjects\RDS\RDS-code\core.c(31,15): warning C4013: 'mkdir' undefined; assuming extern returning int
-J:\VSProjects\RDS\RDS-code\core.c(82,25): warning C4028: formal parameter 1 different from declaration
-  RDS-code.vcxproj -> J:\VSProjects\RDS\RDS-code\x64\Debug\RDS-code.exe
+﻿  main.c
+  RDS-code.vcxproj -> C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\x64\Debug\RDS-code.exe

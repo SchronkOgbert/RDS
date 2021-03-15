@@ -25,16 +25,19 @@ int main()
 		case 2:
 		{
 			//aici vine functia
+			showmenu();
 			break;
 		}
 		case 3:
 		{
 			//aici vine functia
+			showmenu();
 			break;
 		}
 		case 4:
 		{
 			//aici vine functia
+			showmenu();
 			break;
 		}
 

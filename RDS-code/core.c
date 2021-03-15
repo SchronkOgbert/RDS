@@ -168,7 +168,7 @@ char* search_bills(long CNP)
 		{
 			char raw_cnp[21];
 			strcpy(raw_cnp, get_field(buffer, 3));
-			if (CNP == string_to_long(raw_cnp))
+			if (CNP == string_to_long(get_field(buffer, 3)))
 			{
 				if (res)
 				{
@@ -179,24 +179,17 @@ char* search_bills(long CNP)
 			}
 		}
 	}
+	fclose(file);
 	return res;
 }
 
 int check_cnp(long CNP)
 {
-	FILE* file = fopen(CLIENTS, "r");
-	if (file)
+	for (int i = 0; i < people_count; i++)
 	{
-		char buffer[256];
-		fgets(buffer, 256, file);
-		while (fgets(buffer, 256, file))
+		if (people[i]->cnp == CNP)
 		{
-			char* tmp = _strdup(buffer);
-			if (CNP == string_to_long(get_field(buffer, 2)))
-			{
-				return 1;
-			}
-			free(tmp);
+			return 1;
 		}
 	}
 	return 0;
@@ -265,6 +258,8 @@ char* get_field(char* line, int num)
 	while (token != NULL) {
 		if (i == num)
 		{
+			char res[64];
+			strcpy(res, token);
 			return token;
 		}
 		token = strtok(NULL, ",");

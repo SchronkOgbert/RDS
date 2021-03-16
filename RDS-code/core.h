@@ -33,12 +33,14 @@ void prepare_quit();
 void append_to_csv(FILE* file, int argc, char* argv[]);
 char* search_bills(long CNP);
 int check_cnp(long CNP);
+char* get_bill_data(char* bill_lines);
 
 //utility functions
 char* int_to_string(int x);
 char* long_to_string(long x);
 long string_to_long(char* string);
 char* get_field(char* line, int num);
+struct tm parse_date(char* in_string);
 
 //low-level stuff functions
 void delete_string_array(int elc, char* v[]);

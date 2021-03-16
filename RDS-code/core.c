@@ -264,6 +264,68 @@ void delete_string_array(int elc, char* v[])
 	}
 }
 
+char* get_bill_data(char* bill_lines)
+{
+	char* tmp = malloc(strlen(bill_lines) + 1);
+	char buffer[128];
+	strcpy(tmp, bill_lines);
+	if (return_buffer)
+	{
+		free(return_buffer);
+	}
+	for (int i = 0; tmp[i] != '\0'; i++)
+	{
+		strcpy(buffer, NULL);
+		while (tmp[i] != '\n')
+		{
+			strcat(buffer, tmp[i]);
+			i++;
+		}
+		time_t t = time(NULL);
+		struct tm tm = *localtime(&t);
+
+	}
+	free(tmp);
+	return return_buffer;
+}
+
+struct tm parse_date(char* in_string)
+{
+	char buffer[16];
+	strcpy(buffer, in_string);
+	struct tm res;
+	int data = 0;
+	char* token = strtok(buffer, "/");
+	int i = 0;
+	/* walk through other tokens */
+	while (token != NULL) 
+	{
+		switch (i)
+		{
+		case 0:
+		{
+			res.tm_wday = string_to_long(token);
+			break;
+		}
+		case 1:
+		{
+			res.tm_mon = string_to_long(token);
+			break;
+		}
+		case 2:
+		{
+			res.tm_year = string_to_long(token);
+			break;
+		}
+		default:
+			return res;
+		}
+		token = strtok(NULL, "/");
+		i++;
+	}
+	return res;
+}
+
 char* get_field(char* line, int num)
 {
 	char buffer[256];
@@ -271,7 +333,8 @@ char* get_field(char* line, int num)
 	char* token = strtok(buffer, ",");
 	int i = 0;
 	/* walk through other tokens */
-	while (token != NULL) {
+	while (token != NULL) 
+	{
 		if (i == num)
 		{
 			if (return_buffer)

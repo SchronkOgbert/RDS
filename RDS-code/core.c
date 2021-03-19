@@ -268,22 +268,48 @@ char* get_bill_data(char* bill_lines)
 {
 	char* tmp = malloc(strlen(bill_lines) + 1);
 	char buffer[128];
+	char* r_value;
 	strcpy(tmp, bill_lines);
 	if (return_buffer)
 	{
 		free(return_buffer);
+		return_buffer = NULL;
 	}
 	for (int i = 0; tmp[i] != '\0'; i++)
 	{
-		strcpy(buffer, NULL);
+		strcpy(buffer, "");
 		while (tmp[i] != '\n')
 		{
-			strcat(buffer, tmp[i]);
+			strapp(buffer, tmp[i]);
 			i++;
 		}
 		time_t t = time(NULL);
 		struct tm tm = *localtime(&t);
+		tm.tm_year += 1900;
+		tm.tm_mon++;
+		struct tm bill_date = parse_date(get_field(buffer, 4));
+		if (compare_dates(tm, bill_date, 2))
+		{
+			if (r_value)
+			{
+				int add_size = 0;
 
+			}
+			else
+			{
+				r_value = malloc(16);
+			}
+		}
+	}
+	if (return_buffer)
+	{
+		free(return_buffer);
+	}
+	return_buffer = malloc(strlen(r_value) + 1);
+	strcpy(return_buffer, r_value);
+	if (r_value)
+	{
+		free(r_value);
 	}
 	free(tmp);
 	return return_buffer;
@@ -324,6 +350,25 @@ struct tm parse_date(char* in_string)
 		i++;
 	}
 	return res;
+}
+
+int compare_dates(struct tm d1, struct tm d2, int level)
+{
+	switch (level)
+	{
+	case 1:
+		return d1.tm_year == d2.tm_year;
+	case 2:
+		return (d1.tm_year == d2.tm_year && d1.tm_mon == d2.tm_mon);
+	default:
+		return (d1.tm_year == d2.tm_year && d1.tm_mon == d2.tm_mon && d1.tm_mday == d2.tm_mday);
+	}
+}
+
+void strapp(char* s, char c)
+{
+	s[strlen(s) + 1] = '\0';
+	s[strlen(s)] = c;	
 }
 
 char* get_field(char* line, int num)

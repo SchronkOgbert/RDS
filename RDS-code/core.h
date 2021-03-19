@@ -41,6 +41,8 @@ char* long_to_string(long x);
 long string_to_long(char* string);
 char* get_field(char* line, int num);
 struct tm parse_date(char* in_string);
+int compare_dates(struct tm d1, struct tm d2, int level);
+void strapp(char* s, char c);
 
 //low-level stuff functions
 void delete_string_array(int elc, char* v[]);

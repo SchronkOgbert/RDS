@@ -14,7 +14,9 @@
 //needed files
 FILE* bills;
 person** people;
+bill** bill_data;
 int people_count;
+int bill_count;
 char* return_buffer;
 
 //setup functions
@@ -33,12 +35,17 @@ void prepare_quit();
 void append_to_csv(FILE* file, int argc, char* argv[]);
 char* search_bills(long CNP);
 int check_cnp(long CNP);
+void set_bill_data(char* bill_lines);
 
 //utility functions
 char* int_to_string(int x);
 char* long_to_string(long x);
 long string_to_long(char* string);
 char* get_field(char* line, int num);
+struct tm parse_date(char* in_string);
+int compare_dates(struct tm d1, struct tm d2, int level);
+void strapp(char* s, char c);
+void free_bill_data();
 
 //low-level stuff functions
 void delete_string_array(int elc, char* v[]);

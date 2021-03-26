@@ -264,18 +264,13 @@ void delete_string_array(int elc, char* v[])
 	}
 }
 
-char* get_bill_data(char* bill_lines)
+void set_bill_data(char* bill_lines)
 {
 	char* tmp = malloc(strlen(bill_lines) + 1);
 	char buffer[128];
-	char* r_value;
+	free_bill_data();
 	strcpy(tmp, bill_lines);
-	if (return_buffer)
-	{
-		free(return_buffer);
-		return_buffer = NULL;
-	}
-	for (int i = 0; tmp[i] != '\0'; i++)
+	for (int i = 0; i < strlen(tmp); i++)
 	{
 		strcpy(buffer, "");
 		while (tmp[i] != '\n')
@@ -290,29 +285,28 @@ char* get_bill_data(char* bill_lines)
 		struct tm bill_date = parse_date(get_field(buffer, 4));
 		if (compare_dates(tm, bill_date, 2))
 		{
-			if (r_value)
+			bill_count++;
+			if (bill_data)
 			{
-				int add_size = 0;
-
+				bill_data = (bill**)realloc(bill_data, sizeof(bill*) * bill_count);
 			}
 			else
 			{
-				r_value = malloc(16);
+				bill_data = (bill**)malloc(sizeof(bill*) * bill_count);
 			}
+			char name[40];
+			strcpy(name, get_field(buffer, 0));
+			char first_name[40];
+			strcpy(first_name, get_field(buffer, 1));
+			char address[60];
+			strcpy(address, get_field(buffer, 2));
+			int sum = string_to_long(get_field(buffer, 5));
+			long cnp = string_to_long(get_field(buffer, 3));
+			bill_data[bill_count - 1] = bill_init(name, first_name, address, cnp, bill_date, sum);
+
 		}
 	}
-	if (return_buffer)
-	{
-		free(return_buffer);
-	}
-	return_buffer = malloc(strlen(r_value) + 1);
-	strcpy(return_buffer, r_value);
-	if (r_value)
-	{
-		free(r_value);
-	}
 	free(tmp);
-	return return_buffer;
 }
 
 struct tm parse_date(char* in_string)
@@ -369,6 +363,22 @@ void strapp(char* s, char c)
 {
 	s[strlen(s) + 1] = '\0';
 	s[strlen(s)] = c;	
+}
+
+void free_bill_data()
+{
+	if (bill_data)
+	{
+		for (int i = 0; i < bill_count; i++)
+		{
+			if (bill_data[i])
+			{
+				free(bill_data[i]);
+			}
+		}
+	}
+	free(bill_data);
+	bill_count = 0;
 }
 
 char* get_field(char* line, int num)

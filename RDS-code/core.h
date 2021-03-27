@@ -10,6 +10,7 @@
 #define TEMPLATES "db/abonamente.csv"
 #define WORKING_FOLDER "db"
 #define CLIENTS "db/clienti.csv"
+#define PHONES "db/telefoane.csv"
 
 //needed files
 FILE* bills;
@@ -46,6 +47,7 @@ struct tm parse_date(char* in_string);
 int compare_dates(struct tm d1, struct tm d2, int level);
 void strapp(char* s, char c);
 void free_bill_data();
+int has_cable(long cnp);
 
 //low-level stuff functions
 void delete_string_array(int elc, char* v[]);

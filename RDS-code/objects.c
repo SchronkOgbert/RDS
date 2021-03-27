@@ -33,7 +33,7 @@ void print_person(person* pers)
 	printf("%s %s %ld\n", pers->name, pers->first_name, pers->cnp);
 }
 
-bill* bill_init(char* name, char* first_name, char* address, long cnp, struct tm date, int sum)
+bill* bill_init(char* name, char* first_name, char* address, service_type service, long cnp, struct tm date, int sum)
 {
 	bill* new_bill = malloc(sizeof(bill));
 	new_bill->name = malloc(strlen(name) + 1);
@@ -43,6 +43,7 @@ bill* bill_init(char* name, char* first_name, char* address, long cnp, struct tm
 	strcpy(new_bill->name, name);
 	strcpy(new_bill->first_name, first_name);
 	strcpy(new_bill->address, address);
+	new_bill->service = service;
 	new_bill->cnp = cnp;
 	new_bill->date = date;
 	new_bill->sum = sum;
@@ -54,12 +55,9 @@ void set_bill_name(bill* obj, char* name)
 {
 	if (obj->name)
 	{
-		obj->name = realloc(obj->name, strlen(name) + 1);
+		free(obj->name);
 	}
-	else
-	{
-		obj->name = malloc(strlen(name) + 1);
-	}
+	obj->name = malloc(strlen(name) + 1);
 	strcpy(obj->name, name);
 }
 

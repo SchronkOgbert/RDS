@@ -406,6 +406,52 @@ int has_cable(long cnp)
 	}
 }
 
+void map_phones()
+{
+	FILE* file = fopen(PHONES, "r");
+	char buffer[256];
+	if (file)
+	{
+		fgets(buffer, 256, file);
+		while (fgets(buffer, 256, file))
+		{
+			long cnp = string_to_long(get_field(buffer, 3));
+			int cnp_index = has_phone(cnp);
+			if (cnp_index > -1)
+			{
+				phones[cnp_index]->number++;
+			}
+			else
+			{
+				if (phones)
+				{
+					phone_count++;
+					phones = (phone**)realloc(phones, sizeof(phone*) * phone_count);					
+				}
+				else
+				{
+					phone_count = 1;
+					phones = (phone**)malloc(sizeof(phone*));
+				}
+				phones[phone_count - 1] = init_phone(cnp, 1);
+			}
+		}
+	}
+	fclose(file);
+}
+
+int has_phone(long cnp)
+{
+	for (int i = 0; i < phone_count; i++)
+	{
+		if (phones[i]->cnp == cnp)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
 char* get_field(char* line, int num)
 {
 	char buffer[256];

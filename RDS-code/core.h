@@ -16,8 +16,10 @@
 FILE* bills;
 person** people;
 bill** bill_data;
+phone** phones;
 int people_count;
 int bill_count;
+int phone_count;
 char* return_buffer;
 
 //setup functions
@@ -48,6 +50,8 @@ int compare_dates(struct tm d1, struct tm d2, int level);
 void strapp(char* s, char c);
 void free_bill_data();
 int has_cable(long cnp);
+void map_phones();
+int has_phone(long cnp);
 
 //low-level stuff functions
 void delete_string_array(int elc, char* v[]);

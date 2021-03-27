@@ -86,3 +86,10 @@ void set_bill_address(bill* obj, char* address)
 	}
 	strcpy(obj->address, address);
 }
+
+phone* init_phone(long cnp, int number)
+{
+	phone* new_phone = (phone*)malloc(sizeof(phone));
+	new_phone->cnp = cnp;
+	new_phone->number = number;
+}

@@ -52,8 +52,13 @@ void check_files()
 	}
 	if (!check_file(BILLS))
 	{
-		char* columns[] = { "Nume", "Prenume", "Adresa", "CNP", "Data emiterii", "Suma" };
-		create_csv_file(BILLS, 6, columns);
+		char* columns[] = { "Nume", "Prenume", "Serviciu", "Adresa", "CNP", "Data emiterii", "Suma" };
+		create_csv_file(BILLS, 7, columns);
+	}
+	if (!check_file(PHONES))
+	{
+		char* columns[] = { "CNP", "Telefon" };
+		create_csv_file(PHONES, 2, columns);
 	}
 }
 
@@ -299,10 +304,19 @@ void set_bill_data(char* bill_lines)
 			char first_name[40];
 			strcpy(first_name, get_field(buffer, 1));
 			char address[60];
-			strcpy(address, get_field(buffer, 2));
-			int sum = string_to_long(get_field(buffer, 5));
-			long cnp = string_to_long(get_field(buffer, 3));
-			bill_data[bill_count - 1] = bill_init(name, first_name, address, cnp, bill_date, sum);
+			strcpy(address, get_field(buffer, 3));
+			int sum = string_to_long(get_field(buffer, 6));
+			long cnp = string_to_long(get_field(buffer, 4));
+			service_type type;
+			if (strcmp("Telefon", get_field(buffer, 2)) == 0)
+			{
+				type = Phone;
+			}
+			else
+			{
+				type = Cable;
+			}
+			bill_data[bill_count - 1] = bill_init(name, first_name, address, cnp, type, bill_date, sum);
 
 		}
 	}
@@ -379,6 +393,63 @@ void free_bill_data()
 	}
 	free(bill_data);
 	bill_count = 0;
+}
+
+int has_cable(long cnp)
+{
+	for (int i = 0; i < bill_count; i++)
+	{
+		if (bill_data[i]->service == Cable)
+		{
+			return 1;
+		}
+	}
+}
+
+void map_phones()
+{
+	FILE* file = fopen(PHONES, "r");
+	char buffer[256];
+	if (file)
+	{
+		fgets(buffer, 256, file);
+		while (fgets(buffer, 256, file))
+		{
+			long cnp = string_to_long(get_field(buffer, 3));
+			int cnp_index = has_phone(cnp);
+			if (cnp_index > -1)
+			{
+				phones[cnp_index]->number++;
+			}
+			else
+			{
+				if (phones)
+				{
+					phone_count++;
+					phones = (phone**)realloc(phones, sizeof(phone*) * phone_count);					
+				}
+				else
+				{
+					phone_count = 1;
+					phones = (phone**)malloc(sizeof(phone*));
+				}
+				phones[phone_count - 1] = init_phone(cnp, 1);
+			}
+		}
+	}
+	fclose(file);
+}
+
+int has_phone(long cnp)
+{
+	for (int i = 0; i < phone_count; i++)
+	{
+		if (phones[i]->cnp == cnp)
+		{
+			return i;
+		}
+	}
+	return -1;
 }
 
 char* get_field(char* line, int num)

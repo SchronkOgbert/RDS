@@ -2,8 +2,13 @@
 #define OBJ
 #include "libs.h"
 
-typedef struct person person;
+typedef enum service_type
+{
+	Phone,
+	Cable
+}service_type;
 
+typedef struct person person;
 struct person
 {
 	char name[41];
@@ -15,11 +20,35 @@ struct person
 	void(*print)(person*);
 };
 
+typedef struct bill
+{
+	char* name;
+	char* first_name;
+	char* address;
+	service_type service;
+	long cnp;
+	struct tm date;
+	int sum;
+}bill;
+
+typedef struct phone
+{
+	long cnp;
+	int number;
+}phone;
+
 person* person_init(char* name, char* first_name, long CNP);
 void set_person_name(person* pers, char* name);
 void set_person_first_name(person* pers, char* first_name);
 void set_person_cnp(person* pers, long cnp);
 void print_person(person* pers);
+bill* bill_init(char* name, char* first_name, char* address, service_type service, long cnp, struct tm date, int sum);
+
+void set_bill_name(bill* obj, char* name);
+void set_bill_first_name(bill* obj, char* first_name);
+void set_bill_address(bill* obj, char* address);
+
+phone* init_phone(long cnp, int number);
 
 
 #endif

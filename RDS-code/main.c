@@ -43,7 +43,6 @@ int main()
 
 		}
 	}
-
 	prepare_quit(); //this function needs to be last to be executed
 
 	//system("pause");

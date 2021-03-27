@@ -52,8 +52,13 @@ void check_files()
 	}
 	if (!check_file(BILLS))
 	{
-		char* columns[] = { "Nume", "Prenume", "Adresa", "CNP", "Data emiterii", "Suma" };
-		create_csv_file(BILLS, 6, columns);
+		char* columns[] = { "Nume", "Prenume", "Serviciu", "Adresa", "CNP", "Data emiterii", "Suma" };
+		create_csv_file(BILLS, 7, columns);
+	}
+	if (!check_file(PHONES))
+	{
+		char* columns[] = { "CNP", "Telefon" };
+		create_csv_file(PHONES, 2, columns);
 	}
 }
 
@@ -264,6 +269,189 @@ void delete_string_array(int elc, char* v[])
 	}
 }
 
+void set_bill_data(char* bill_lines)
+{
+	char* tmp = malloc(strlen(bill_lines) + 1);
+	char buffer[128];
+	free_bill_data();
+	strcpy(tmp, bill_lines);
+	for (int i = 0; i < strlen(tmp); i++)
+	{
+		strcpy(buffer, "");
+		while (tmp[i] != '\n')
+		{
+			strapp(buffer, tmp[i]);
+			i++;
+		}
+		time_t t = time(NULL);
+		struct tm tm = *localtime(&t);
+		tm.tm_year += 1900;
+		tm.tm_mon++;
+		struct tm bill_date = parse_date(get_field(buffer, 4));
+		if (compare_dates(tm, bill_date, 2))
+		{
+			bill_count++;
+			if (bill_data)
+			{
+				bill_data = (bill**)realloc(bill_data, sizeof(bill*) * bill_count);
+			}
+			else
+			{
+				bill_data = (bill**)malloc(sizeof(bill*) * bill_count);
+			}
+			char name[40];
+			strcpy(name, get_field(buffer, 0));
+			char first_name[40];
+			strcpy(first_name, get_field(buffer, 1));
+			char address[60];
+			strcpy(address, get_field(buffer, 3));
+			int sum = string_to_long(get_field(buffer, 6));
+			long cnp = string_to_long(get_field(buffer, 4));
+			service_type type;
+			if (strcmp("Telefon", get_field(buffer, 2)) == 0)
+			{
+				type = Phone;
+			}
+			else
+			{
+				type = Cable;
+			}
+			bill_data[bill_count - 1] = bill_init(name, first_name, address, cnp, type, bill_date, sum);
+
+		}
+	}
+	free(tmp);
+}
+
+struct tm parse_date(char* in_string)
+{
+	char buffer[16];
+	strcpy(buffer, in_string);
+	struct tm res;
+	int data = 0;
+	char* token = strtok(buffer, "/");
+	int i = 0;
+	/* walk through other tokens */
+	while (token != NULL) 
+	{
+		switch (i)
+		{
+		case 0:
+		{
+			res.tm_wday = string_to_long(token);
+			break;
+		}
+		case 1:
+		{
+			res.tm_mon = string_to_long(token);
+			break;
+		}
+		case 2:
+		{
+			res.tm_year = string_to_long(token);
+			break;
+		}
+		default:
+			return res;
+		}
+		token = strtok(NULL, "/");
+		i++;
+	}
+	return res;
+}
+
+int compare_dates(struct tm d1, struct tm d2, int level)
+{
+	switch (level)
+	{
+	case 1:
+		return d1.tm_year == d2.tm_year;
+	case 2:
+		return (d1.tm_year == d2.tm_year && d1.tm_mon == d2.tm_mon);
+	default:
+		return (d1.tm_year == d2.tm_year && d1.tm_mon == d2.tm_mon && d1.tm_mday == d2.tm_mday);
+	}
+}
+
+void strapp(char* s, char c)
+{
+	s[strlen(s) + 1] = '\0';
+	s[strlen(s)] = c;	
+}
+
+void free_bill_data()
+{
+	if (bill_data)
+	{
+		for (int i = 0; i < bill_count; i++)
+		{
+			if (bill_data[i])
+			{
+				free(bill_data[i]);
+			}
+		}
+	}
+	free(bill_data);
+	bill_count = 0;
+}
+
+int has_cable(long cnp)
+{
+	for (int i = 0; i < bill_count; i++)
+	{
+		if (bill_data[i]->service == Cable)
+		{
+			return 1;
+		}
+	}
+}
+
+void map_phones()
+{
+	FILE* file = fopen(PHONES, "r");
+	char buffer[256];
+	if (file)
+	{
+		fgets(buffer, 256, file);
+		while (fgets(buffer, 256, file))
+		{
+			long cnp = string_to_long(get_field(buffer, 3));
+			int cnp_index = has_phone(cnp);
+			if (cnp_index > -1)
+			{
+				phones[cnp_index]->number++;
+			}
+			else
+			{
+				if (phones)
+				{
+					phone_count++;
+					phones = (phone**)realloc(phones, sizeof(phone*) * phone_count);					
+				}
+				else
+				{
+					phone_count = 1;
+					phones = (phone**)malloc(sizeof(phone*));
+				}
+				phones[phone_count - 1] = init_phone(cnp, 1);
+			}
+		}
+	}
+	fclose(file);
+}
+
+int has_phone(long cnp)
+{
+	for (int i = 0; i < phone_count; i++)
+	{
+		if (phones[i]->cnp == cnp)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
 char* get_field(char* line, int num)
 {
 	char buffer[256];
@@ -271,7 +459,8 @@ char* get_field(char* line, int num)
 	char* token = strtok(buffer, ",");
 	int i = 0;
 	/* walk through other tokens */
-	while (token != NULL) {
+	while (token != NULL) 
+	{
 		if (i == num)
 		{
 			if (return_buffer)

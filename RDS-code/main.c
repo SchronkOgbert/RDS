@@ -4,6 +4,7 @@ int option;
 
 void startmsg();
 void showmenu();
+void printclient();
 
 int main()
 {
@@ -18,30 +19,27 @@ int main()
 		{
 		case 1:
 		{
-			//aici vine functia
-			showmenu();
+			printclient();
 			break;
 		}
 		case 2:
 		{
 			//aici vine functia
-			showmenu();
 			break;
 		}
 		case 3:
 		{
 			//aici vine functia
-			showmenu();
 			break;
 		}
 		case 4:
 		{
 			//aici vine functia
-			showmenu();
 			break;
 		}
 
 		}
+		showmenu();
 	}
 	prepare_quit(); //this function needs to be last to be executed
 
@@ -67,4 +65,17 @@ void showmenu()
 	printf("Introduceti numarul optiunii: ");
 	scanf("%d", &option);
 	printf("\n");
+}
+
+void printclient()
+{
+	for (int i = 0; i < people_count; i++)
+	{
+		set_bill_data(search_bills(people[i]->cnp));
+		for (int j = 0; j < bill_count; j++)
+		{
+			printf("%s %s: %s, %d\n", bill_data[j]->name, bill_data[j]->first_name, bill_data[j]->address, bill_data[j]->sum);
+		}
+	}
+	
 }

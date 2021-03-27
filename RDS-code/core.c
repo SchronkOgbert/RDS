@@ -181,7 +181,7 @@ char* search_bills(long CNP)
 		fgets(buffer, 256, file);
 		while (fgets(buffer, 256, file))
 		{
-			if (CNP == string_to_long(get_field(buffer, 3)))
+			if (CNP == string_to_long(get_field(buffer, 4)))
 			{
 				if (return_buffer)
 				{
@@ -278,7 +278,7 @@ void set_bill_data(char* bill_lines)
 	for (int i = 0; i < strlen(tmp); i++)
 	{
 		strcpy(buffer, "");
-		while (tmp[i] != '\n')
+		while (tmp[i] != '\n' && tmp[i]!='\0')
 		{
 			strapp(buffer, tmp[i]);
 			i++;
@@ -287,7 +287,7 @@ void set_bill_data(char* bill_lines)
 		struct tm tm = *localtime(&t);
 		tm.tm_year += 1900;
 		tm.tm_mon++;
-		struct tm bill_date = parse_date(get_field(buffer, 4));
+		struct tm bill_date = parse_date(get_field(buffer, 5));
 		if (compare_dates(tm, bill_date, 2))
 		{
 			bill_count++;

@@ -18,7 +18,7 @@ int main()
 		switch (option)
 		{
 		case 1:
-		{
+		{			
 			printclient();
 			break;
 		}
@@ -39,14 +39,13 @@ int main()
 		}
 
 		}
-		//system("cls");
 		showmenu();
 	}
-	system("cls");
+	clear_console();
 	printf("Exit...\n");
 	prepare_quit(); //this function needs to be last to be executed
 
-	//system("pause");
+	system("pause");
 
 	return 0;
 }
@@ -72,6 +71,12 @@ void showmenu()
 
 void printclient()
 {
+	clear_console();
+	if (!people_count)
+	{
+		printf("Nu exista clienti in baza de date...\n\n");
+		return;
+	}
 	for (int i = 0; i < people_count; i++)
 	{
 		set_bill_data(search_bills(people[i]->cnp));

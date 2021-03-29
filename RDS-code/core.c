@@ -87,7 +87,7 @@ void check_working_folder()
 	struct stat sb;
 	if (stat(WORKING_FOLDER, &sb) == 0 && S_ISDIR(sb.st_mode))
 	{
-		printf("Successfully opened %s directory...\n", WORKING_FOLDER);
+		//printf("Successfully opened %s directory...\n", WORKING_FOLDER);
 	}
 	else
 	{
@@ -281,7 +281,7 @@ void set_bill_data(char* bill_lines)
 {
 	if (bill_lines == NULL || !strcmp(bill_lines, "\n"))
 	{
-		printf("Nu exista date pentru clientul cautat...\n");
+		printf("Nu exista date pentru clientul cautat...\n\n");
 		return;
 	}
 	char* tmp = malloc(strlen(bill_lines) + 1);

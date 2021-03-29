@@ -39,8 +39,11 @@ int main()
 		}
 
 		}
+		//system("cls");
 		showmenu();
 	}
+	system("cls");
+	printf("Exit...\n");
 	prepare_quit(); //this function needs to be last to be executed
 
 	//system("pause");

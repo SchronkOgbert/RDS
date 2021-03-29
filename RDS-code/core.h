@@ -52,6 +52,7 @@ void free_bill_data();
 int has_cable(long cnp);
 void map_phones();
 int has_phone(long cnp);
+inline void clear_console() { system("cls"); }
 
 //low-level stuff functions
 void delete_string_array(int elc, char* v[]);

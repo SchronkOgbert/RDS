@@ -87,7 +87,7 @@ void check_working_folder()
 	struct stat sb;
 	if (stat(WORKING_FOLDER, &sb) == 0 && S_ISDIR(sb.st_mode))
 	{
-		printf("Successfully opened %s directory...\n", WORKING_FOLDER);
+		//printf("Successfully opened %s directory...\n", WORKING_FOLDER);
 	}
 	else
 	{
@@ -175,6 +175,11 @@ void append_to_csv(FILE* file, int argc, char* argv[])
 char* search_bills(long CNP)
 {
 	FILE* file = fopen(BILLS, "r");
+	if (return_buffer)
+	{
+		free(return_buffer);
+		return_buffer = NULL;
+	}
 	char buffer[256];
 	if (file)
 	{
@@ -185,10 +190,13 @@ char* search_bills(long CNP)
 			{
 				if (return_buffer)
 				{
-					free(return_buffer);					
+					return_buffer = (char*)realloc(return_buffer, strlen(return_buffer) + strlen(buffer) + 1);
 				}
-				return_buffer = malloc(strlen(buffer) + 1);
-				strcpy(return_buffer, buffer);
+				else
+				{
+					return_buffer = malloc(strlen(buffer) + 1);				}
+				
+				strcat(return_buffer, buffer);
 			}
 		}
 	}
@@ -271,6 +279,11 @@ void delete_string_array(int elc, char* v[])
 
 void set_bill_data(char* bill_lines)
 {
+	if (bill_lines == NULL || !strcmp(bill_lines, "\n"))
+	{
+		printf("Nu exista date pentru clientul cautat...\n\n");
+		return;
+	}
 	char* tmp = malloc(strlen(bill_lines) + 1);
 	char buffer[128];
 	free_bill_data();
@@ -326,6 +339,11 @@ void set_bill_data(char* bill_lines)
 struct tm parse_date(char* in_string)
 {
 	char buffer[16];
+	if (!in_string)
+	{
+		printf("Error: Input string is empty");
+		return;
+	}
 	strcpy(buffer, in_string);
 	struct tm res;
 	int data = 0;

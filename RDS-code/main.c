@@ -1,4 +1,4 @@
-#include "core.h"
+﻿#include "core.h"
 
 int option;
 
@@ -59,7 +59,7 @@ void startmsg()
 void showmenu()
 {
 	printf("Va rugam alegeti optiunea:\n");
-	printf("1.Cautati suma de plata dupa cnp.\n");
+	printf("1.Afisati pentru fiecare abonat numele, adresa si suma de plata pe luna curenta.\n");
 	printf("2.Afisati abonamentele telefonice.\n");
 	printf("3.Afisati numarul de abonati care au abonament la cel putin 3 numere de telefon.\n");
 	printf("4.Creeaza un contract.\n");
@@ -87,3 +87,4 @@ void printclient()
 	}
 	
 }
+

@@ -175,6 +175,7 @@ void append_to_csv(FILE* file, int argc, char* argv[])
 char* search_bills(long CNP)
 {
 	FILE* file = fopen(BILLS, "r");
+	char* r = NULL;
 	if (return_buffer)
 	{
 		free(return_buffer);
@@ -188,20 +189,21 @@ char* search_bills(long CNP)
 		{
 			if (CNP == string_to_long(get_field(buffer, 4)))
 			{
-				if (return_buffer)
+				if (r)
 				{
-					return_buffer = (char*)realloc(return_buffer, strlen(return_buffer) + strlen(buffer) + 1);
+					r = (char*)realloc(return_buffer, strlen(return_buffer) + strlen(buffer) + 1);
+					strcat(r, buffer);
 				}
 				else
 				{
-					return_buffer = malloc(strlen(buffer) + 1);				}
-				
-				strcat(return_buffer, buffer);
+					r = malloc(strlen(buffer) + 1);
+					strcpy(r, buffer);
+				}				
 			}
 		}
 	}
 	fclose(file);
-	return return_buffer;
+	return r;
 }
 
 int check_cnp(long CNP)
@@ -410,6 +412,7 @@ void free_bill_data()
 		}
 	}
 	free(bill_data);
+	bill_data = NULL;
 	bill_count = 0;
 }
 
@@ -475,19 +478,22 @@ char* get_field(char* line, int num)
 	char buffer[256];
 	strcpy(buffer, line);
 	char* token = strtok(buffer, ",");
+	char* r = NULL;
 	int i = 0;
 	/* walk through other tokens */
 	while (token != NULL) 
 	{
 		if (i == num)
 		{
-			if (return_buffer)
+			/**if (return_buffer)
 			{
 				free(return_buffer);
 			}
-			return_buffer = malloc(strlen(token) + 1);
-			strcpy(return_buffer, token);
-			return return_buffer;
+			return_buffer = malloc(strlen(token) + 1);*/
+			//strcpy(return_buffer, token);
+			r = malloc(strlen(token) + 1);
+			strcpy(r, token);
+			return r;
 		}
 		token = strtok(NULL, ",");
 		i++;

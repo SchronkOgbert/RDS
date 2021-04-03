@@ -1,2 +1,4 @@
 ﻿  contract.c
+  main.c
+  Generating Code...
   RDS-code.vcxproj -> D:\GitKraken\RDS\RDS-code\x64\Debug\RDS-code.exe

@@ -16,7 +16,9 @@ void createcontract()
 	name = read_name();
 	first_name = read_first_name();
 	address = read_address();
-	confirm_data(option, cnp, name, first_name, address);
+	if (confirm_data(option, cnp, name, first_name, address)) {
+		createcontract();
+	}
 }
 
 void select_service(contract *con)
@@ -92,7 +94,7 @@ char* read_address()
 	return address;
 }
 
-void confirm_data(contract con, long cnp, char* name, char* first_name, char* address)
+int confirm_data(contract con, long cnp, char* name, char* first_name, char* address)
 {
 	clear_console();
 	printf("Sunt corecte datele acestea?\n");
@@ -114,4 +116,11 @@ void confirm_data(contract con, long cnp, char* name, char* first_name, char* ad
 		printf("Tipul contractului: Premium\n");
 	}
 	printf("Durata abonamentului: %d\n", con.years);
+	printf("Confirmati datele?\n");
+	printf("0. Da\n");
+	printf("1. Nu\n");
+	printf("Introduceti numarul optiunii: ");
+	int option;
+	scanf("%d", &option);
+	return option;
 }

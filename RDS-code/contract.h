@@ -18,7 +18,7 @@ void read_cnp(long* cnp);
 char* read_name();
 char* read_first_name();
 char* read_address();
-void confirm_data(contract con, long cnp, char* name, char* first_name, char* address);
+int confirm_data(contract con, long cnp, char* name, char* first_name, char* address);
 
 #endif
 

@@ -1,4 +1,5 @@
 ﻿#include "core.h"
+#include "contract.h"
 
 int option;
 
@@ -8,6 +9,7 @@ void printclient();
 
 int main()
 {
+	
 	setup(); //this function needs to be the first line to be executed
 
 
@@ -34,7 +36,7 @@ int main()
 		}
 		case 4:
 		{
-			//aici vine functia
+			createcontract();
 			break;
 		}
 

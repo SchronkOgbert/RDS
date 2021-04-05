@@ -1,6 +1,6 @@
 ﻿  core.c
-C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\core.c(18,15): warning C4013: 'mkdir' undefined; assuming extern returning int
-C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\core.c(347,3): warning C4033: 'parse_date' must return a value
-C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\core.c(381): warning C4715: 'parse_date': not all control paths return a value
-C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\core.c(428): warning C4715: 'has_cable': not all control paths return a value
+C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\core.c(19,15): warning C4013: 'mkdir' undefined; assuming extern returning int
+C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\core.c(348,3): warning C4033: 'parse_date' must return a value
+C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\core.c(382): warning C4715: 'parse_date': not all control paths return a value
+C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\core.c(429): warning C4715: 'has_cable': not all control paths return a value
   RDS-code.vcxproj -> C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\x64\Debug\RDS-code.exe

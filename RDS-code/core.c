@@ -7,6 +7,7 @@ void setup()
 	//this part checks if the files we're gonna write actually exist
 	//if they don't, they get created
 	check_files();
+	map_phones();
 	//for speed, this will stay open while the program runs
 	get_people();
 	bills = fopen(BILLS, "a");
@@ -436,7 +437,7 @@ void map_phones()
 		fgets(buffer, 256, file);
 		while (fgets(buffer, 256, file))
 		{
-			long cnp = string_to_long(get_field(buffer, 3));
+			long cnp = string_to_long(get_field(buffer, 0));
 			int cnp_index = has_phone(cnp);
 			if (cnp_index > -1)
 			{

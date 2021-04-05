@@ -6,6 +6,8 @@ int option;
 void startmsg();
 void showmenu();
 void printclient();
+void abonament_tel();
+
 
 int main()
 {
@@ -31,7 +33,7 @@ int main()
 		}
 		case 3:
 		{
-			//aici vine functia
+			abonament_tel();
 			break;
 		}
 		case 4:
@@ -88,5 +90,20 @@ void printclient()
 		}
 	}
 	
+}
+
+void abonament_tel()
+{
+	int contor = 0;
+	for (int i = 0; i < people_count; i++)
+	{
+		int index = has_phone(people[i]->cnp);
+		if (index > -1)
+		{
+			if (phones[index]->number)
+				contor++;
+		}
+	}
+	printf("Numarul de persoane cu cel putin 3 numere de telefon este: %d\n", contor);
 }
 

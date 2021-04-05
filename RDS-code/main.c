@@ -1,13 +1,17 @@
-#include "core.h"
+﻿#include "core.h"
+#include "contract.h"
 
 int option;
 
 void startmsg();
 void showmenu();
 void printclient();
+void abonament_tel();
+
 
 int main()
 {
+	
 	setup(); //this function needs to be the first line to be executed
 
 
@@ -29,12 +33,12 @@ int main()
 		}
 		case 3:
 		{
-			//aici vine functia
+			abonament_tel();
 			break;
 		}
 		case 4:
 		{
-			//aici vine functia
+			createcontract();
 			break;
 		}
 
@@ -59,7 +63,7 @@ void startmsg()
 void showmenu()
 {
 	printf("Va rugam alegeti optiunea:\n");
-	printf("1.Cautati suma de plata dupa cnp.\n");
+	printf("1.Afisati pentru fiecare abonat numele, adresa si suma de plata pe luna curenta.\n");
 	printf("2.Afisati abonamentele telefonice.\n");
 	printf("3.Afisati numarul de abonati care au abonament la cel putin 3 numere de telefon.\n");
 	printf("4.Creeaza un contract.\n");
@@ -87,3 +91,19 @@ void printclient()
 	}
 	
 }
+
+void abonament_tel()
+{
+	int contor = 0;
+	for (int i = 0; i < people_count; i++)
+	{
+		int index = has_phone(people[i]->cnp);
+		if (index > -1)
+		{
+			if (phones[index]->number)
+				contor++;
+		}
+	}
+	printf("Numarul de persoane cu cel putin 3 numere de telefon este: %d\n", contor);
+}
+

@@ -17,8 +17,14 @@ void createcontract()
 	first_name = read_first_name();
 	address = read_address();
 	if (confirm_data(option, cnp, name, first_name, address)) {
+		free(name);
+		free(first_name);
+		free(address);
 		createcontract();
 	}
+	free(name);
+	free(first_name);
+	free(address);
 }
 
 void select_service(contract *con)
@@ -43,12 +49,17 @@ void select_type(contract *con)
 
 void select_years(contract* con)
 {
+	int buffer;
 	clear_console();
 	printf("Selectati durata abonamentului:\n");
 	printf("0.Un an\n");
 	printf("1.Doi ani\n");
 	printf("Introduceti numarul optiunii: ");
-	scanf("%d", &con->years);
+	scanf("%d", &buffer);
+	if (buffer == 0)
+		con->years = 1;
+	else
+		con->years = 2;
 }
 void read_cnp(long* cnp)
 {

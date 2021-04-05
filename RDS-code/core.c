@@ -191,7 +191,7 @@ char* search_bills(long CNP)
 			{
 				if (r)
 				{
-					r = (char*)realloc(return_buffer, strlen(return_buffer) + strlen(buffer) + 1);
+					r = (char*)realloc(r, strlen(r) + strlen(buffer) + 2);
 					strcat(r, buffer);
 				}
 				else

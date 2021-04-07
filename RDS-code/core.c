@@ -10,7 +10,7 @@ void setup()
 	map_phones();
 	//for speed, this will stay open while the program runs
 	get_people();
-	bills = fopen(BILLS, "a");
+	//bills = fopen(BILLS, "a");
 }
 
 int create_dir(char* dir_name)
@@ -19,7 +19,7 @@ int create_dir(char* dir_name)
 	check = mkdir(dir_name);
 	if (!check)
 	{
-		printf("Succesfully created directory %s...\n", dir_name);
+		//printf("Succesfully created directory %s...\n", dir_name);
 		return 1;
 	}
 	printf("Unable to create directory %s...\n", dir_name);
@@ -34,7 +34,8 @@ int check_file(char* filename)
 		fclose(file);
 		return 1;
 	}
-	printf("File %s does not exist...\n", filename);
+	//printf("File %s does not exist...\n", filename);
+	//fclose(file);
 	return 0;
 }
 
@@ -42,8 +43,8 @@ void check_files()
 {
 	if (!check_file(CLIENTS))
 	{
-		char* columns[] = { "Nume", "Prenume", "CNP" };
-		create_csv_file(CLIENTS, 3, columns);
+		char* columns[] = { "Nume", "Prenume", "CNP", "Adresa" };
+		create_csv_file(CLIENTS, 4, columns);
 	}
 	if (!check_file(TEMPLATES))
 	{
@@ -61,6 +62,15 @@ void check_files()
 		char* columns[] = { "CNP", "Telefon" };
 		create_csv_file(PHONES, 2, columns);
 	}
+	if (!check_file(SUBSCRIPTIONS))
+	{
+		char* columns[] = { "CNP", "Index abonament" };
+		create_csv_file(SUBSCRIPTIONS, 2, columns);
+	}
+	if (!check_file(CONFIG))
+	{
+		create_config_file();
+	}
 }
 
 void get_people()
@@ -73,9 +83,24 @@ void get_people()
 	long cnp;
 	while (fgets(buffer, 256, file))
 	{
-		strcpy(name, get_field(buffer, 0));
-		strcpy(first_name, get_field(buffer, 1));
-		cnp = string_to_long(get_field(buffer, 2));
+		char* tmp = get_field(buffer, 0);
+		strcpy(name, tmp);
+		if (tmp)
+		{
+			free(tmp);
+		}
+		tmp = get_field(buffer, 1);		
+		strcpy(first_name, tmp);
+		if (tmp)
+		{
+			free(tmp);
+		}
+		tmp = get_field(buffer, 2);
+		cnp = string_to_long(tmp);
+		if (tmp)
+		{
+			free(tmp);
+		}
 		people = realloc(people, sizeof(person) * (people_count + 1));
 		people_count++;
 		people[people_count - 1] = person_init(name, first_name, cnp);
@@ -100,7 +125,7 @@ void check_working_folder()
 
 void create_csv_file(char* filename, int argc, char* argv[])
 {
-	printf("Creating %s...\n", filename);
+	//printf("Creating %s...\n", filename);
 	FILE* file = fopen(filename, "w");
 	for (int i = 0; i < argc - 1; i++)
 	{
@@ -135,12 +160,15 @@ void generate_templates()
 	}
 }
 
+void create_config_file()
+{
+	FILE* file = fopen(CONFIG, "w");
+	fprintf(file, "current_number:70000001");
+	fclose(file);
+}
+
 void prepare_quit()
 {
-	if (return_buffer)
-	{
-		free(return_buffer);
-	}
 	if (bills)
 	{
 		fclose(bills);
@@ -152,14 +180,11 @@ void prepare_quit()
 	free(people);
 }
 
-void append_to_csv(FILE* file, int argc, char* argv[])
+void append_to_csv(char* filename, int argc, char* argv[])
 {
 	//the cnp should be the fourth el in the array
-	if (bills == NULL)
-	{
-		bills = fopen(BILLS, "a");
-	}
-	if (bills)
+	FILE* file = fopen(filename, "a");
+	if (file)
 	{
 		for (int i = 0; i < argc - 1; i++)
 		{
@@ -171,24 +196,21 @@ void append_to_csv(FILE* file, int argc, char* argv[])
 	{
 		printf("failed to open file...\n");
 	}
+	fclose(file);
 }
 
 char* search_bills(long CNP)
 {
 	FILE* file = fopen(BILLS, "r");
 	char* r = NULL;
-	if (return_buffer)
-	{
-		free(return_buffer);
-		return_buffer = NULL;
-	}
 	char buffer[256];
 	if (file)
 	{
 		fgets(buffer, 256, file);
 		while (fgets(buffer, 256, file))
 		{
-			if (CNP == string_to_long(get_field(buffer, 4)))
+			char* tmp = get_field(buffer, 4);
+			if (CNP == string_to_long(tmp))
 			{
 				if (r)
 				{
@@ -200,6 +222,10 @@ char* search_bills(long CNP)
 					r = malloc(strlen(buffer) + 1);
 					strcpy(r, buffer);
 				}				
+			}
+			if (tmp)
+			{
+				free(tmp);
 			}
 		}
 	}
@@ -229,13 +255,9 @@ char* int_to_string(int x)
 		x /= 10;
 	}
 	_strrev(buffer);
-	if (return_buffer)
-	{
-		free(return_buffer);
-	}
-	return_buffer = malloc(strlen(buffer) + 1);
-	strcpy(return_buffer, buffer);
-	return return_buffer;
+	char* r = malloc(strlen(buffer) + 1);
+	strcpy(r, buffer);
+	return r;
 }
 
 char* long_to_string(long x)
@@ -248,13 +270,9 @@ char* long_to_string(long x)
 		x /= 10;
 	}
 	_strrev(buffer);
-	if (return_buffer)
-	{
-		free(return_buffer);
-	}
-	return_buffer = malloc(strlen(buffer) + 1);
-	strcpy(return_buffer, buffer);
-	return return_buffer;
+	char* r = malloc(strlen(buffer) + 1);
+	strcpy(r, buffer);
+	return r;
 }
 
 long string_to_long(char* string)
@@ -277,6 +295,7 @@ void delete_string_array(int elc, char* v[])
 			continue;
 		}
 		free(v[i]);
+		v[i] = NULL;
 	}
 }
 
@@ -303,7 +322,12 @@ void set_bill_data(char* bill_lines)
 		struct tm tm = *localtime(&t);
 		tm.tm_year += 1900;
 		tm.tm_mon++;
-		struct tm bill_date = parse_date(get_field(buffer, 5));
+		char* ret_val = get_field(buffer, 5);
+		struct tm bill_date = parse_date(ret_val);
+		if (ret_val)
+		{
+			free(ret_val);
+		}
 		if (compare_dates(tm, bill_date, 2))
 		{
 			bill_count++;
@@ -316,15 +340,26 @@ void set_bill_data(char* bill_lines)
 				bill_data = (bill**)malloc(sizeof(bill*) * bill_count);
 			}
 			char name[40];
-			strcpy(name, get_field(buffer, 0));
+			ret_val = get_field(buffer, 0);
+			strcpy(name, ret_val);
+			free(ret_val);
 			char first_name[40];
-			strcpy(first_name, get_field(buffer, 1));
+			ret_val = get_field(buffer, 1);
+			strcpy(first_name, ret_val);
+			free(ret_val);
 			char address[60];
-			strcpy(address, get_field(buffer, 3));
-			int sum = string_to_long(get_field(buffer, 6));
-			long cnp = string_to_long(get_field(buffer, 4));
+			ret_val = get_field(buffer, 3);
+			strcpy(address, ret_val);
+			free(ret_val);
+			ret_val = get_field(buffer, 6);
+			int sum = string_to_long(ret_val);
+			free(ret_val);
+			ret_val = get_field(buffer, 4);
+			long cnp = string_to_long(ret_val);
+			free(ret_val);
 			service_type type;
-			if (strcmp("Telefon", get_field(buffer, 2)) == 0)
+			ret_val = get_field(buffer, 2);
+			if (strcmp("Telefon", ret_val) == 0)
 			{
 				type = Phone;
 			}
@@ -332,11 +367,50 @@ void set_bill_data(char* bill_lines)
 			{
 				type = Cable;
 			}
+			free(ret_val);
 			bill_data[bill_count - 1] = bill_init(name, first_name, address, cnp, type, bill_date, sum);
 
 		}
 	}
 	free(tmp);
+}
+
+char* get_full_csv_line(int number, char* filename)
+{
+	char* r = NULL;
+	char buffer[256];
+	FILE* file = fopen(filename, "r");
+	//fgets(buffer, 255, file);
+	int count = 0;
+	while (fgets(buffer, 255, file) && count <= number)
+	{
+		count++;
+	}
+	if (count == number + 1)
+	{
+		r = (char*)malloc(strlen(buffer) + 1);
+		strcpy(r, buffer);
+		return r;
+	}
+	return NULL;
+}
+
+int does_client_exist(long cnp)
+{
+	FILE* file = fopen(BILLS, "r");
+	char* buffer[256];
+	fgets(buffer, 255, file);
+	while (fgets(buffer, 255, file))
+	{
+		char* tmp = get_field(buffer, 2);
+		if (cnp == string_to_long(tmp))
+		{
+			free(tmp);
+			return 1;
+		}
+		free(tmp);
+	}
+	return 0;
 }
 
 struct tm parse_date(char* in_string)
@@ -437,7 +511,9 @@ void map_phones()
 		fgets(buffer, 256, file);
 		while (fgets(buffer, 256, file))
 		{
-			long cnp = string_to_long(get_field(buffer, 0));
+			char* tmp = get_field(buffer, 0);
+			long cnp = string_to_long(tmp);
+			free(tmp);
 			int cnp_index = has_phone(cnp);
 			if (cnp_index > -1)
 			{
@@ -472,6 +548,24 @@ int has_phone(long cnp)
 		}
 	}
 	return -1;
+}
+
+char* get_config_property(char* key)
+{
+	FILE* conf = fopen(CONFIG, "r");
+	char buffer[64];
+	while (fgets(buffer, 127, conf))
+	{
+		char* tmp = _strdup(buffer);
+		char* local_key = strtok(buffer, ":");
+		if (strcmp(key, local_key) == 0)
+		{
+			fclose(conf);
+			return tmp + strlen(local_key) + 1;
+		}
+	}
+	fclose(conf);
+	return NULL;
 }
 
 char* get_field(char* line, int num)

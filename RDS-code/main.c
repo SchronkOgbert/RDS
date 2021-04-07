@@ -14,6 +14,7 @@ int main()
 	
 	setup(); //this function needs to be the first line to be executed
 
+	//printf("%s\n", get_config_property("current_number"));
 
 	startmsg();
 
@@ -100,7 +101,7 @@ void abonament_tel()
 		int index = has_phone(people[i]->cnp);
 		if (index > -1)
 		{
-			if (phones[index]->number)
+			if (phones[index]->number > 2)
 				contor++;
 		}
 	}

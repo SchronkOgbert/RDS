@@ -20,7 +20,6 @@ phone** phones;
 int people_count;
 int bill_count;
 int phone_count;
-char* return_buffer;
 
 //setup functions
 void setup();

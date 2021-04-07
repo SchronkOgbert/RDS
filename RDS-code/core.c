@@ -73,9 +73,24 @@ void get_people()
 	long cnp;
 	while (fgets(buffer, 256, file))
 	{
-		strcpy(name, get_field(buffer, 0));
-		strcpy(first_name, get_field(buffer, 1));
-		cnp = string_to_long(get_field(buffer, 2));
+		char* tmp = get_field(buffer, 0);
+		strcpy(name, tmp);
+		if (tmp)
+		{
+			free(tmp);
+		}
+		tmp = get_field(buffer, 1);		
+		strcpy(first_name, tmp);
+		if (tmp)
+		{
+			free(tmp);
+		}
+		tmp = get_field(buffer, 2);
+		cnp = string_to_long(tmp);
+		if (tmp)
+		{
+			free(tmp);
+		}
 		people = realloc(people, sizeof(person) * (people_count + 1));
 		people_count++;
 		people[people_count - 1] = person_init(name, first_name, cnp);
@@ -137,10 +152,6 @@ void generate_templates()
 
 void prepare_quit()
 {
-	if (return_buffer)
-	{
-		free(return_buffer);
-	}
 	if (bills)
 	{
 		fclose(bills);
@@ -177,18 +188,14 @@ char* search_bills(long CNP)
 {
 	FILE* file = fopen(BILLS, "r");
 	char* r = NULL;
-	if (return_buffer)
-	{
-		free(return_buffer);
-		return_buffer = NULL;
-	}
 	char buffer[256];
 	if (file)
 	{
 		fgets(buffer, 256, file);
 		while (fgets(buffer, 256, file))
 		{
-			if (CNP == string_to_long(get_field(buffer, 4)))
+			char* tmp = get_field(buffer, 4);
+			if (CNP == string_to_long(tmp))
 			{
 				if (r)
 				{
@@ -200,6 +207,10 @@ char* search_bills(long CNP)
 					r = malloc(strlen(buffer) + 1);
 					strcpy(r, buffer);
 				}				
+			}
+			if (tmp)
+			{
+				free(tmp);
 			}
 		}
 	}
@@ -229,13 +240,9 @@ char* int_to_string(int x)
 		x /= 10;
 	}
 	_strrev(buffer);
-	if (return_buffer)
-	{
-		free(return_buffer);
-	}
-	return_buffer = malloc(strlen(buffer) + 1);
-	strcpy(return_buffer, buffer);
-	return return_buffer;
+	char* r = malloc(strlen(buffer) + 1);
+	strcpy(r, buffer);
+	return r;
 }
 
 char* long_to_string(long x)
@@ -248,13 +255,9 @@ char* long_to_string(long x)
 		x /= 10;
 	}
 	_strrev(buffer);
-	if (return_buffer)
-	{
-		free(return_buffer);
-	}
-	return_buffer = malloc(strlen(buffer) + 1);
-	strcpy(return_buffer, buffer);
-	return return_buffer;
+	char* r = malloc(strlen(buffer) + 1);
+	strcpy(r, buffer);
+	return r;
 }
 
 long string_to_long(char* string)
@@ -277,6 +280,7 @@ void delete_string_array(int elc, char* v[])
 			continue;
 		}
 		free(v[i]);
+		v[i] = NULL;
 	}
 }
 
@@ -303,7 +307,12 @@ void set_bill_data(char* bill_lines)
 		struct tm tm = *localtime(&t);
 		tm.tm_year += 1900;
 		tm.tm_mon++;
-		struct tm bill_date = parse_date(get_field(buffer, 5));
+		char* ret_val = get_field(buffer, 5);
+		struct tm bill_date = parse_date(ret_val);
+		if (ret_val)
+		{
+			free(ret_val);
+		}
 		if (compare_dates(tm, bill_date, 2))
 		{
 			bill_count++;
@@ -316,15 +325,26 @@ void set_bill_data(char* bill_lines)
 				bill_data = (bill**)malloc(sizeof(bill*) * bill_count);
 			}
 			char name[40];
-			strcpy(name, get_field(buffer, 0));
+			ret_val = get_field(buffer, 0);
+			strcpy(name, ret_val);
+			free(ret_val);
 			char first_name[40];
-			strcpy(first_name, get_field(buffer, 1));
+			ret_val = get_field(buffer, 1);
+			strcpy(first_name, ret_val);
+			free(ret_val);
 			char address[60];
-			strcpy(address, get_field(buffer, 3));
-			int sum = string_to_long(get_field(buffer, 6));
-			long cnp = string_to_long(get_field(buffer, 4));
+			ret_val = get_field(buffer, 3);
+			strcpy(address, ret_val);
+			free(ret_val);
+			ret_val = get_field(buffer, 6);
+			int sum = string_to_long(ret_val);
+			free(ret_val);
+			ret_val = get_field(buffer, 4);
+			long cnp = string_to_long(ret_val);
+			free(ret_val);
 			service_type type;
-			if (strcmp("Telefon", get_field(buffer, 2)) == 0)
+			ret_val = get_field(buffer, 2);
+			if (strcmp("Telefon", ret_val) == 0)
 			{
 				type = Phone;
 			}
@@ -332,6 +352,7 @@ void set_bill_data(char* bill_lines)
 			{
 				type = Cable;
 			}
+			free(ret_val);
 			bill_data[bill_count - 1] = bill_init(name, first_name, address, cnp, type, bill_date, sum);
 
 		}
@@ -437,7 +458,9 @@ void map_phones()
 		fgets(buffer, 256, file);
 		while (fgets(buffer, 256, file))
 		{
-			long cnp = string_to_long(get_field(buffer, 0));
+			char* tmp = get_field(buffer, 0);
+			long cnp = string_to_long(tmp);
+			free(tmp);
 			int cnp_index = has_phone(cnp);
 			if (cnp_index > -1)
 			{

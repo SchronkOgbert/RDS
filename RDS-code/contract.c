@@ -154,39 +154,45 @@ void submit_data(contract option, long cnp, char* name, char* first_name, char* 
 	}
 	if (!does_client_exist(cnp))
 	{
+		printf("adding client...\n");
 		char* columns[4];
 		columns[0] = name;
 		columns[1] = first_name;
 		columns[2] = long_to_string(cnp);
 		columns[3] = address;
-		append_to_csv(CLIENTS, 4, columns);
+		add_person(name, first_name, cnp);
+		append_to_csv(CLIENTS, 4, columns);		
 		free(columns[2]);
 	}
+	
 	char* columns[2];
 	columns[0] = long_to_string(cnp);
 	columns[1] = int_to_string(sub_index);
 	append_to_csv(SUBSCRIPTIONS, 2, columns);
 	free(columns[1]);
-	char* tmp = get_config_property("current_number");
-	int suffix = string_to_long(tmp);	
-	char number[11] = "07";
-	strcat(number, tmp);
-	columns[1] = number;
-	append_to_csv(PHONES, 2, columns);
-	tmp = int_to_string(suffix + 1);
-	//what imma do now isn't very good but it gets the job done
-	FILE* conf = fopen(CONFIG, "w");
-	if (conf)
+	if (option.service == Phone)
 	{
-		fprintf(conf, "current_number:%s", tmp);
+		map_phones();
+		char* tmp = get_config_property("current_number");
+		int suffix = string_to_long(tmp);
+		char number[11] = "07";
+		strcat(number, tmp);
+		columns[1] = number;
+		append_to_csv(PHONES, 2, columns);
+		tmp = int_to_string(suffix + 1);
+		//what imma do now isn't very good but it gets the job done
+		FILE* conf = fopen(CONFIG, "w");
+		if (conf)
+		{
+			fprintf(conf, "current_number:%s", tmp);
+		}
+		else
+		{
+			printf("could not open file...\n");
+		}
+		fclose(conf);
+		free(tmp);
 	}
-	else
-	{
-		printf("could not open file...\n");
-	}
-	fclose(conf);
-	free(tmp);
-
 	free(name);
 	free(first_name);
 	free(address);

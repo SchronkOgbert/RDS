@@ -397,7 +397,7 @@ char* get_full_csv_line(int number, char* filename)
 
 int does_client_exist(long cnp)
 {
-	FILE* file = fopen(BILLS, "r");
+	FILE* file = fopen(CLIENTS, "r");
 	char* buffer[256];
 	fgets(buffer, 255, file);
 	while (fgets(buffer, 255, file))
@@ -566,6 +566,22 @@ char* get_config_property(char* key)
 	}
 	fclose(conf);
 	return NULL;
+}
+
+void add_person(char* name, char* first_name, long cnp)
+{
+	if (people)
+	{
+		people_count++;
+		people = (person**)realloc(people, sizeof(person*) * people_count);
+		people[people_count - 1] = person_init(name, first_name, cnp);
+	}
+	else
+	{
+		people_count = 1;
+		people = (person**)malloc(sizeof(person*));
+		people[people_count - 1] = person_init(name, first_name, cnp);
+	}
 }
 
 char* get_field(char* line, int num)

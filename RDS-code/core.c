@@ -10,7 +10,7 @@ void setup()
 	map_phones();
 	//for speed, this will stay open while the program runs
 	get_people();
-	bills = fopen(BILLS, "a");
+	//bills = fopen(BILLS, "a");
 }
 
 int create_dir(char* dir_name)
@@ -35,6 +35,7 @@ int check_file(char* filename)
 		return 1;
 	}
 	//printf("File %s does not exist...\n", filename);
+	//fclose(file);
 	return 0;
 }
 
@@ -42,8 +43,8 @@ void check_files()
 {
 	if (!check_file(CLIENTS))
 	{
-		char* columns[] = { "Nume", "Prenume", "CNP" };
-		create_csv_file(CLIENTS, 3, columns);
+		char* columns[] = { "Nume", "Prenume", "CNP", "Adresa" };
+		create_csv_file(CLIENTS, 4, columns);
 	}
 	if (!check_file(TEMPLATES))
 	{
@@ -162,7 +163,7 @@ void generate_templates()
 void create_config_file()
 {
 	FILE* file = fopen(CONFIG, "w");
-	fprintf(file, "current_number:0000001");
+	fprintf(file, "current_number:70000001");
 	fclose(file);
 }
 
@@ -179,14 +180,11 @@ void prepare_quit()
 	free(people);
 }
 
-void append_to_csv(FILE* file, int argc, char* argv[])
+void append_to_csv(char* filename, int argc, char* argv[])
 {
 	//the cnp should be the fourth el in the array
-	if (bills == NULL)
-	{
-		bills = fopen(BILLS, "a");
-	}
-	if (bills)
+	FILE* file = fopen(filename, "a");
+	if (file)
 	{
 		for (int i = 0; i < argc - 1; i++)
 		{
@@ -198,6 +196,7 @@ void append_to_csv(FILE* file, int argc, char* argv[])
 	{
 		printf("failed to open file...\n");
 	}
+	fclose(file);
 }
 
 char* search_bills(long CNP)
@@ -376,6 +375,44 @@ void set_bill_data(char* bill_lines)
 	free(tmp);
 }
 
+char* get_full_csv_line(int number, char* filename)
+{
+	char* r = NULL;
+	char buffer[256];
+	FILE* file = fopen(filename, "r");
+	//fgets(buffer, 255, file);
+	int count = 0;
+	while (fgets(buffer, 255, file) && count <= number)
+	{
+		count++;
+	}
+	if (count == number + 1)
+	{
+		r = (char*)malloc(strlen(buffer) + 1);
+		strcpy(r, buffer);
+		return r;
+	}
+	return NULL;
+}
+
+int does_client_exist(long cnp)
+{
+	FILE* file = fopen(BILLS, "r");
+	char* buffer[256];
+	fgets(buffer, 255, file);
+	while (fgets(buffer, 255, file))
+	{
+		char* tmp = get_field(buffer, 2);
+		if (cnp == string_to_long(tmp))
+		{
+			free(tmp);
+			return 1;
+		}
+		free(tmp);
+	}
+	return 0;
+}
+
 struct tm parse_date(char* in_string)
 {
 	char buffer[16];
@@ -511,6 +548,24 @@ int has_phone(long cnp)
 		}
 	}
 	return -1;
+}
+
+char* get_config_property(char* key)
+{
+	FILE* conf = fopen(CONFIG, "r");
+	char buffer[64];
+	while (fgets(buffer, 127, conf))
+	{
+		char* tmp = _strdup(buffer);
+		char* local_key = strtok(buffer, ":");
+		if (strcmp(key, local_key) == 0)
+		{
+			fclose(conf);
+			return tmp + strlen(local_key) + 1;
+		}
+	}
+	fclose(conf);
+	return NULL;
 }
 
 char* get_field(char* line, int num)

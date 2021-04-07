@@ -41,6 +41,8 @@ void append_to_csv(FILE* file, int argc, char* argv[]);
 char* search_bills(long CNP);
 int check_cnp(long CNP);
 void set_bill_data(char* bill_lines);
+char* get_full_csv_line(int number, char* filename);
+int does_client_exist(long cnp);
 
 //utility functions
 char* int_to_string(int x);
@@ -55,6 +57,7 @@ int has_cable(long cnp);
 void map_phones();
 int has_phone(long cnp);
 inline void clear_console() { system("cls"); }
+char* get_config_property(char* key);
 
 
 //low-level stuff functions

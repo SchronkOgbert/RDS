@@ -14,6 +14,7 @@ int main()
 	
 	setup(); //this function needs to be the first line to be executed
 
+	//printf("%s\n", get_config_property("current_number"));
 
 	startmsg();
 

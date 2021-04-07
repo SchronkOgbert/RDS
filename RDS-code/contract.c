@@ -21,11 +21,11 @@ void createcontract()
 		free(first_name);
 		free(address);
 		createcontract();
-		return;
 	}
-	free(name);
-	free(first_name);
-	free(address);
+	else
+	{
+		submit_data(option, cnp, name, first_name, address);
+	}	
 }
 
 void select_service(contract *con)
@@ -135,4 +135,59 @@ int confirm_data(contract con, long cnp, char* name, char* first_name, char* add
 	int option;
 	scanf("%d", &option);
 	return option;
+}
+
+void submit_data(contract option, long cnp, char* name, char* first_name, char* address)
+{
+	int sub_index = 0;
+	if (option.service == Cable)
+	{
+		sub_index += 4;
+	}
+	if (option.type == Premium)
+	{
+		sub_index += 2;
+	}
+	if (option.years == 2)
+	{
+		sub_index++;
+	}
+	if (!does_client_exist(cnp))
+	{
+		char* columns[4];
+		columns[0] = name;
+		columns[1] = first_name;
+		columns[2] = long_to_string(cnp);
+		columns[3] = address;
+		append_to_csv(CLIENTS, 4, columns);
+		free(columns[2]);
+	}
+	char* columns[2];
+	columns[0] = long_to_string(cnp);
+	columns[1] = int_to_string(sub_index);
+	append_to_csv(SUBSCRIPTIONS, 2, columns);
+	free(columns[1]);
+	char* tmp = get_config_property("current_number");
+	int suffix = string_to_long(tmp);	
+	char number[11] = "07";
+	strcat(number, tmp);
+	columns[1] = number;
+	append_to_csv(PHONES, 2, columns);
+	tmp = int_to_string(suffix + 1);
+	//what imma do now isn't very good but it gets the job done
+	FILE* conf = fopen(CONFIG, "w");
+	if (conf)
+	{
+		fprintf(conf, "current_number:%s", tmp);
+	}
+	else
+	{
+		printf("could not open file...\n");
+	}
+	fclose(conf);
+	free(tmp);
+
+	free(name);
+	free(first_name);
+	free(address);
 }

@@ -7,6 +7,7 @@ void startmsg();
 void showmenu();
 void printclient();
 void abonament_tel();
+void get_phone_contract();
 
 
 int main()
@@ -44,6 +45,8 @@ int main()
 		}
 
 		}
+		system("pause");
+		clear_console();
 		showmenu();
 	}
 	clear_console();
@@ -106,5 +109,14 @@ void abonament_tel()
 		}
 	}
 	printf("Numarul de persoane cu cel putin 3 numere de telefon este: %d\n", contor);
+}
+
+void get_phone_contract()
+{
+	FILE* file = fopen(PHONES, "r");
+	for (int i = 0; i < people_count; i++)
+	{
+
+	}
 }
 

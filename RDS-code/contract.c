@@ -25,6 +25,7 @@ void createcontract()
 	else
 	{
 		submit_data(option, cnp, name, first_name, address);
+		printf("Contract creat.\n");
 	}	
 }
 

@@ -100,7 +100,7 @@ void abonament_tel()
 		int index = has_phone(people[i]->cnp);
 		if (index > -1)
 		{
-			if (phones[index]->number)
+			if (phones[index]->number > 2)
 				contor++;
 		}
 	}

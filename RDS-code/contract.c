@@ -21,6 +21,7 @@ void createcontract()
 		free(first_name);
 		free(address);
 		createcontract();
+		return;
 	}
 	free(name);
 	free(first_name);

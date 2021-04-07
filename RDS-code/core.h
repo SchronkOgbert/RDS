@@ -11,6 +11,8 @@
 #define WORKING_FOLDER "db"
 #define CLIENTS "db/clienti.csv"
 #define PHONES "db/telefoane.csv"
+#define SUBSCRIPTIONS "db/abonamente_clienti.csv"
+#define CONFIG "db/config.ini"
 
 //needed files
 FILE* bills;
@@ -30,6 +32,7 @@ int create_dir(char* dir_name);
 int check_file(char* filename);
 void create_csv_file(char* filename, int argc, char* argv[]);
 void generate_templates();
+void create_config_file();
 
 void prepare_quit();
 
@@ -52,6 +55,7 @@ int has_cable(long cnp);
 void map_phones();
 int has_phone(long cnp);
 inline void clear_console() { system("cls"); }
+
 
 //low-level stuff functions
 void delete_string_array(int elc, char* v[]);

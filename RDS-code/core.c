@@ -19,7 +19,7 @@ int create_dir(char* dir_name)
 	check = mkdir(dir_name);
 	if (!check)
 	{
-		printf("Succesfully created directory %s...\n", dir_name);
+		//printf("Succesfully created directory %s...\n", dir_name);
 		return 1;
 	}
 	printf("Unable to create directory %s...\n", dir_name);
@@ -34,7 +34,7 @@ int check_file(char* filename)
 		fclose(file);
 		return 1;
 	}
-	printf("File %s does not exist...\n", filename);
+	//printf("File %s does not exist...\n", filename);
 	return 0;
 }
 
@@ -60,6 +60,15 @@ void check_files()
 	{
 		char* columns[] = { "CNP", "Telefon" };
 		create_csv_file(PHONES, 2, columns);
+	}
+	if (!check_file(SUBSCRIPTIONS))
+	{
+		char* columns[] = { "CNP", "Index abonament" };
+		create_csv_file(SUBSCRIPTIONS, 2, columns);
+	}
+	if (!check_file(CONFIG))
+	{
+		create_config_file();
 	}
 }
 
@@ -115,7 +124,7 @@ void check_working_folder()
 
 void create_csv_file(char* filename, int argc, char* argv[])
 {
-	printf("Creating %s...\n", filename);
+	//printf("Creating %s...\n", filename);
 	FILE* file = fopen(filename, "w");
 	for (int i = 0; i < argc - 1; i++)
 	{
@@ -148,6 +157,13 @@ void generate_templates()
 		system("pause");
 		exit(-1);
 	}
+}
+
+void create_config_file()
+{
+	FILE* file = fopen(CONFIG, "w");
+	fprintf(file, "current_number:0000001");
+	fclose(file);
 }
 
 void prepare_quit()

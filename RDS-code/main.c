@@ -1,4 +1,4 @@
-﻿#include "core.h"
+#include "core.h"
 #include "contract.h"
 
 int option;
@@ -8,6 +8,7 @@ void showmenu();
 void printclient();
 void abonament_tel();
 void print_file();
+void get_phone_contract();
 
 
 int main()
@@ -54,6 +55,8 @@ int main()
 			break;
 		}
 		}
+		system("pause");
+		clear_console();
 		showmenu();
 	}
 	clear_console();
@@ -131,5 +134,13 @@ void print_file()
 	print_file_content(filename);
 	system("pause");
 	clear_console();
+}
+void get_phone_contract()
+{
+	FILE* file = fopen(PHONES, "r");
+	for (int i = 0; i < people_count; i++)
+	{
+
+	}
 }
 

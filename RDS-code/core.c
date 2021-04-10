@@ -611,3 +611,22 @@ char* get_field(char* line, int num)
 	}
 	return NULL;
 }
+
+void print_file_content(char* filename)
+{
+	FILE* file = fopen(filename, "r");
+	if (file)
+	{
+		char buffer[256];
+		fgets(buffer, 255, file);
+		while (fgets(buffer, 255, file))
+		{
+			printf("%s", buffer);
+		}
+		fclose(file);
+	}
+	else
+	{
+		printf("Nu exista fisierul solicitat\n");
+	}	
+}

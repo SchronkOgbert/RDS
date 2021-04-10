@@ -140,7 +140,7 @@ int confirm_data(contract con, long cnp, char* name, char* first_name, char* add
 
 void submit_data(contract option, long cnp, char* name, char* first_name, char* address)
 {
-	int sub_index = 0;
+	int sub_index = 1;
 	if (option.service == Cable)
 	{
 		sub_index += 4;

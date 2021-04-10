@@ -19,6 +19,7 @@ char* read_name();
 char* read_first_name();
 char* read_address();
 int confirm_data(contract con, long cnp, char* name, char* first_name, char* address);
+void submit_data(contract option, long cnp, char* name, char* first_name, char* address);
 
 #endif
 

@@ -11,6 +11,8 @@
 #define WORKING_FOLDER "db"
 #define CLIENTS "db/clienti.csv"
 #define PHONES "db/telefoane.csv"
+#define SUBSCRIPTIONS "db/abonamente_clienti.csv"
+#define CONFIG "db/config.ini"
 
 //needed files
 FILE* bills;
@@ -20,7 +22,6 @@ phone** phones;
 int people_count;
 int bill_count;
 int phone_count;
-char* return_buffer;
 
 //setup functions
 void setup();
@@ -31,6 +32,7 @@ int create_dir(char* dir_name);
 int check_file(char* filename);
 void create_csv_file(char* filename, int argc, char* argv[]);
 void generate_templates();
+void create_config_file();
 
 void prepare_quit();
 
@@ -39,6 +41,8 @@ void append_to_csv(FILE* file, int argc, char* argv[]);
 char* search_bills(long CNP);
 int check_cnp(long CNP);
 void set_bill_data(char* bill_lines);
+char* get_full_csv_line(int number, char* filename);
+int does_client_exist(long cnp);
 
 //utility functions
 char* int_to_string(int x);
@@ -53,9 +57,21 @@ int has_cable(long cnp);
 void map_phones();
 int has_phone(long cnp);
 inline void clear_console() { system("cls"); }
+char* get_config_property(char* key);
+void print_file_content(char* filename);
+void add_person(char* name, char* first_name, long cnp);
+void print_phone_contracts(long cnp);
+char** get_phone_numbers(long cnp);
 
 //low-level stuff functions
 void delete_string_array(int elc, char* v[]);
+
+//easter eggs
+inline void secret()
+{
+	clear_console();
+	printf("THEN THE WINGED HUSSARS ARRIVED!\n");
+}
 
 #endif
 

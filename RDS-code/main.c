@@ -132,8 +132,6 @@ void print_file()
 	strcpy(filename, "db/");
 	strcat(filename, buffer);
 	print_file_content(filename);
-	system("pause");
-	clear_console();
 }
 void get_phone_contract()
 {

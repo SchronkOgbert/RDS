@@ -69,8 +69,6 @@ inline void secret()
 {
 	clear_console();
 	printf("THEN THE WINGED HUSSARS ARRIVED!\n");
-	system("pause");
-	clear_console();
 }
 
 #endif

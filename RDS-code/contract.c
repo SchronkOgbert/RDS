@@ -155,7 +155,6 @@ void submit_data(contract option, long cnp, char* name, char* first_name, char* 
 	}
 	if (!does_client_exist(cnp))
 	{
-		printf("adding client...\n");
 		char* columns[4];
 		columns[0] = name;
 		columns[1] = first_name;

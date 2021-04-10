@@ -584,6 +584,65 @@ void add_person(char* name, char* first_name, long cnp)
 	}
 }
 
+void print_phone_contracts(long cnp)
+{
+	FILE* file = fopen(SUBSCRIPTIONS, "r");
+	char buffer[128];
+	char* res = NULL;
+	fgets(buffer, 127, file);
+	int i = 0;
+	char** numbers = get_phone_numbers(cnp);
+	while (fgets(buffer, 127, file))
+	{		
+		char* tmp = get_field(buffer, 0);
+		if (cnp == string_to_long(tmp))
+		{			
+			free(tmp);
+			tmp = get_field(buffer, 1);
+			int index = string_to_long(tmp);
+			free(tmp);
+			tmp = get_full_csv_line(index + 1, TEMPLATES);
+			printf("%sNumar de telefon: %s", tmp, numbers[i]);
+			free(numbers[i]);
+			i++;
+			free(tmp);
+		}
+	}
+	free(numbers);
+	fclose(file);
+}
+
+char** get_phone_numbers(long cnp)
+{
+	char** numbers = NULL;
+	int i = 0;
+	FILE* file = fopen(PHONES, "r");
+	char buffer[128];
+	fgets(buffer, 127, file);
+	while (fgets(buffer, 127, file))
+	{
+		char* tmp = get_field(buffer, 0);
+		if (cnp == string_to_long(tmp))
+		{
+			free(tmp);
+			if (i)
+			{
+				i++;
+				numbers = (char**)realloc(numbers, sizeof(char*) * i);
+			}
+			else
+			{
+				i++;
+				numbers = (char**)malloc(sizeof(char*) * i);
+			}
+			tmp = get_field(buffer, 1);
+			numbers[i - 1] = _strdup(tmp);
+			free(tmp);
+		}
+	}
+	return numbers;
+}
+
 char* get_field(char* line, int num)
 {
 	char buffer[256];
@@ -629,4 +688,5 @@ void print_file_content(char* filename)
 	{
 		printf("Nu exista fisierul solicitat\n");
 	}	
+	fclose(file);
 }

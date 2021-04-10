@@ -16,7 +16,7 @@ int main()
 	
 	setup(); //this function needs to be the first line to be executed
 
-	//printf("%s\n", get_config_property("current_number"));
+	//print_phone_contracts(123456);
 
 	startmsg();
 
@@ -31,7 +31,7 @@ int main()
 		}
 		case 2:
 		{
-			//aici vine functia
+			get_phone_contract();
 			break;
 		}
 		case 3:
@@ -135,10 +135,15 @@ void print_file()
 }
 void get_phone_contract()
 {
-	FILE* file = fopen(PHONES, "r");
+	clear_console();
 	for (int i = 0; i < people_count; i++)
 	{
-
+		printf("Clientul %s %s are urmatoarele abonamente de telefon:\n", people[i]->name, people[i]->first_name);
+		print_phone_contracts(people[i]->cnp);
+		if (i < people_count - 1)
+		{
+			printf("===================================================================\n");
+		}
 	}
 }
 

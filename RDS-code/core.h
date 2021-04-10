@@ -60,6 +60,8 @@ inline void clear_console() { system("cls"); }
 char* get_config_property(char* key);
 void print_file_content(char* filename);
 void add_person(char* name, char* first_name, long cnp);
+void print_phone_contracts(long cnp);
+char** get_phone_numbers(long cnp);
 
 //low-level stuff functions
 void delete_string_array(int elc, char* v[]);

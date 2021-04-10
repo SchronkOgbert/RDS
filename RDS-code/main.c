@@ -7,6 +7,7 @@ void startmsg();
 void showmenu();
 void printclient();
 void abonament_tel();
+void print_file();
 
 
 int main()
@@ -18,7 +19,7 @@ int main()
 
 	startmsg();
 
-	while (option < 5)
+	while (option < 6 || option == 10)
 	{
 		switch (option)
 		{
@@ -42,12 +43,21 @@ int main()
 			createcontract();
 			break;
 		}
-
+		case 5:
+		{
+			print_file();
+			break;
+		}
+		case 10:
+		{
+			secret();
+			break;
+		}
 		}
 		showmenu();
 	}
 	clear_console();
-	printf("Exit...\n");
+	printf("Go ahead and leave. See if I care.\n");
 	prepare_quit(); //this function needs to be last to be executed
 
 	system("pause");
@@ -68,7 +78,8 @@ void showmenu()
 	printf("2.Afisati abonamentele telefonice.\n");
 	printf("3.Afisati numarul de abonati care au abonament la cel putin 3 numere de telefon.\n");
 	printf("4.Creeaza un contract.\n");
-	printf("5.Inchideti aplicatia.\n");
+	printf("5.Afisati continutul unui fisier.\n");
+	printf("6.Inchideti aplicatia.\n");
 	printf("Introduceti numarul optiunii: ");
 	scanf("%d", &option);
 	printf("\n");
@@ -106,5 +117,19 @@ void abonament_tel()
 		}
 	}
 	printf("Numarul de persoane cu cel putin 3 numere de telefon este: %d\n", contor);
+}
+
+void print_file()
+{
+	clear_console();
+	char filename[32];
+	printf("Introduceti numele fisierului: ");
+	scanf("%s", filename);
+	char* buffer = _strdup(filename);
+	strcpy(filename, "db/");
+	strcat(filename, buffer);
+	print_file_content(filename);
+	system("pause");
+	clear_console();
 }
 

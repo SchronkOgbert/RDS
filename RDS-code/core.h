@@ -58,10 +58,19 @@ void map_phones();
 int has_phone(long cnp);
 inline void clear_console() { system("cls"); }
 char* get_config_property(char* key);
-
+void print_file_content(char* filename);
 
 //low-level stuff functions
 void delete_string_array(int elc, char* v[]);
+
+//easter eggs
+inline void secret()
+{
+	clear_console();
+	printf("THEN THE WINGED HUSSARS ARRIVED!\n");
+	system("pause");
+	clear_console();
+}
 
 #endif
 

@@ -46,8 +46,8 @@ int does_client_exist(long cnp);
 
 //utility functions
 char* int_to_string(int x);
-char* long_to_string(long x);
-long string_to_long(char* string);
+char* llong_to_string(long long x);
+long long string_to_llong(char* string);
 char* get_field(char* line, int num);
 struct tm parse_date(char* in_string);
 int compare_dates(struct tm d1, struct tm d2, int level);

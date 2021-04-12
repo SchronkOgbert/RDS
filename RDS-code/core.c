@@ -96,7 +96,7 @@ void get_people()
 			free(tmp);
 		}
 		tmp = get_field(buffer, 2);
-		cnp = string_to_long(tmp);
+		cnp = string_to_llong(tmp);
 		if (tmp)
 		{
 			free(tmp);
@@ -210,7 +210,7 @@ char* search_bills(long CNP)
 		while (fgets(buffer, 256, file))
 		{
 			char* tmp = get_field(buffer, 4);
-			if (CNP == string_to_long(tmp))
+			if (CNP == string_to_llong(tmp))
 			{
 				if (r)
 				{
@@ -260,7 +260,7 @@ char* int_to_string(int x)
 	return r;
 }
 
-char* long_to_string(long x)
+char* llong_to_string(long long x)
 {
 	char buffer[21] = "";
 	while (x)
@@ -275,9 +275,9 @@ char* long_to_string(long x)
 	return r;
 }
 
-long string_to_long(char* string)
+long long string_to_llong(char* string)
 {
-	long res = 0;
+	long long res = 0;
 	for (int i = 0; string[i] != '\0' && string[i] != '\n'; i++)
 	{
 		res = res * 10 + (string[i] - '0');
@@ -352,10 +352,10 @@ void set_bill_data(char* bill_lines)
 			strcpy(address, ret_val);
 			free(ret_val);
 			ret_val = get_field(buffer, 6);
-			int sum = string_to_long(ret_val);
+			int sum = string_to_llong(ret_val);
 			free(ret_val);
 			ret_val = get_field(buffer, 4);
-			long cnp = string_to_long(ret_val);
+			long cnp = string_to_llong(ret_val);
 			free(ret_val);
 			service_type type;
 			ret_val = get_field(buffer, 2);
@@ -403,7 +403,7 @@ int does_client_exist(long cnp)
 	while (fgets(buffer, 255, file))
 	{
 		char* tmp = get_field(buffer, 2);
-		if (cnp == string_to_long(tmp))
+		if (cnp == string_to_llong(tmp))
 		{
 			free(tmp);
 			return 1;
@@ -433,17 +433,17 @@ struct tm parse_date(char* in_string)
 		{
 		case 0:
 		{
-			res.tm_wday = string_to_long(token);
+			res.tm_wday = string_to_llong(token);
 			break;
 		}
 		case 1:
 		{
-			res.tm_mon = string_to_long(token);
+			res.tm_mon = string_to_llong(token);
 			break;
 		}
 		case 2:
 		{
-			res.tm_year = string_to_long(token);
+			res.tm_year = string_to_llong(token);
 			break;
 		}
 		default:
@@ -512,7 +512,7 @@ void map_phones()
 		while (fgets(buffer, 256, file))
 		{
 			char* tmp = get_field(buffer, 0);
-			long cnp = string_to_long(tmp);
+			long cnp = string_to_llong(tmp);
 			free(tmp);
 			int cnp_index = has_phone(cnp);
 			if (cnp_index > -1)
@@ -595,11 +595,11 @@ void print_phone_contracts(long cnp)
 	while (fgets(buffer, 127, file))
 	{		
 		char* tmp = get_field(buffer, 0);
-		if (cnp == string_to_long(tmp))
+		if (cnp == string_to_llong(tmp))
 		{			
 			free(tmp);
 			tmp = get_field(buffer, 1);
-			int index = string_to_long(tmp);
+			int index = string_to_llong(tmp);
 			free(tmp);
 			tmp = get_full_csv_line(index + 1, TEMPLATES);
 			printf("%sNumar de telefon: %s", tmp, numbers[i]);
@@ -622,7 +622,7 @@ char** get_phone_numbers(long cnp)
 	while (fgets(buffer, 127, file))
 	{
 		char* tmp = get_field(buffer, 0);
-		if (cnp == string_to_long(tmp))
+		if (cnp == string_to_llong(tmp))
 		{
 			free(tmp);
 			if (i)

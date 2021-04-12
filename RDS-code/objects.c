@@ -1,6 +1,6 @@
 #include "objects.h"
 
-person* person_init(char* name, char* first_name, long CNP)
+person* person_init(char* name, char* first_name, long long CNP)
 {	
 	person* pers = malloc(sizeof(person));
 	strcpy(pers->name, name);	
@@ -23,7 +23,7 @@ void set_person_first_name(person* pers, char* first_name)
 	strcpy(pers->first_name, first_name);
 }
 
-void set_person_cnp(person* pers, long cnp)
+void set_person_cnp(person* pers, long long cnp)
 {
 	pers->cnp = cnp;
 }
@@ -33,7 +33,7 @@ void print_person(person* pers)
 	printf("%s %s %ld\n", pers->name, pers->first_name, pers->cnp);
 }
 
-bill* bill_init(char* name, char* first_name, char* address, service_type service, long cnp, struct tm date, int sum)
+bill* bill_init(char* name, char* first_name, char* address, service_type service, long long cnp, struct tm date, int sum)
 {
 	bill* new_bill = malloc(sizeof(bill));
 	new_bill->name = malloc(strlen(name) + 1);
@@ -87,7 +87,7 @@ void set_bill_address(bill* obj, char* address)
 	strcpy(obj->address, address);
 }
 
-phone* init_phone(long cnp, int number)
+phone* init_phone(long long cnp, int number)
 {
 	phone* new_phone = (phone*)malloc(sizeof(phone));
 	new_phone->cnp = cnp;

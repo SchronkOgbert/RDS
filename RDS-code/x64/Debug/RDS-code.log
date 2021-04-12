@@ -1,2 +1,7 @@
-﻿  main.c
+﻿  contract.c
+D:\GitKraken\RDS\RDS-code\contract.c(81,6): warning C4013: 'gets' undefined; assuming extern returning int
+D:\GitKraken\RDS\RDS-code\contract.c(167,24): warning C4133: 'function': incompatible types - from 'char [15]' to 'FILE *'
+D:\GitKraken\RDS\RDS-code\contract.c(185,21): warning C4133: 'function': incompatible types - from 'char [15]' to 'FILE *'
+D:\GitKraken\RDS\RDS-code\contract.c(190,29): warning C4133: 'function': incompatible types - from 'char [26]' to 'FILE *'
+D:\GitKraken\RDS\RDS-code\contract.c(201,23): warning C4133: 'function': incompatible types - from 'char [17]' to 'FILE *'
   RDS-code.vcxproj -> D:\GitKraken\RDS\RDS-code\x64\Debug\RDS-code.exe

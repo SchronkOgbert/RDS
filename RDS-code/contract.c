@@ -77,7 +77,8 @@ char* read_name()
 	char buffer[40];
 	clear_console();
 	printf("Introduceti numele: ");
-	scanf("%s", buffer);
+	getchar();
+	gets(buffer, 39);
 	name = (char*)malloc(strlen(buffer) + 1);
 	strcpy(name, buffer);
 	return name;
@@ -89,7 +90,7 @@ char* read_first_name()
 	char buffer[40];
 	clear_console();
 	printf("Introduceti prenumele: ");
-	scanf("%s", buffer);
+	gets(buffer, 39);
 	first_name = (char*)malloc(strlen(buffer) + 1);
 	strcpy(first_name, buffer);
 	return first_name;

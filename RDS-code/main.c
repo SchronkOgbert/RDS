@@ -122,7 +122,7 @@ void abonament_tel()
 	printf("Numarul de persoane cu cel putin 3 numere de telefon este: %d\n", contor);
 }
 
-<<<<<<< Updated upstream
+
 void print_file()
 {
 	clear_console();
@@ -147,7 +147,5 @@ void get_phone_contract()
 		}
 	}
 }
-=======
 
->>>>>>> Stashed changes
 

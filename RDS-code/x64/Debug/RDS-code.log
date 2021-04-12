@@ -1,5 +1,19 @@
-﻿  contract.c
-D:\GitKraken\RDS\RDS-code\contract.c(165,24): warning C4133: 'function': incompatible types - from 'char [15]' to 'FILE *'
-D:\GitKraken\RDS\RDS-code\contract.c(172,29): warning C4133: 'function': incompatible types - from 'char [26]' to 'FILE *'
-D:\GitKraken\RDS\RDS-code\contract.c(182,23): warning C4133: 'function': incompatible types - from 'char [17]' to 'FILE *'
-  RDS-code.vcxproj -> D:\GitKraken\RDS\RDS-code\x64\Debug\RDS-code.exe
+﻿  core.c
+C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\core.c(20,15): warning C4013: 'mkdir' undefined; assuming extern returning int
+C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\core.c(184,26): warning C4028: formal parameter 1 different from declaration
+C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\core.c(356,1): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
+C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\core.c(403,14): warning C4047: 'function': 'char *' differs in levels of indirection from 'char *[256]'
+C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\core.c(403,8): warning C4024: 'fgets': different types for formal and actual parameter 1
+C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\core.c(404,21): warning C4047: 'function': 'char *' differs in levels of indirection from 'char *[256]'
+C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\core.c(404,15): warning C4024: 'fgets': different types for formal and actual parameter 1
+C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\core.c(406,31): warning C4047: 'function': 'char *' differs in levels of indirection from 'char *[256]'
+C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\core.c(406,25): warning C4024: 'get_field': different types for formal and actual parameter 1
+C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\core.c(423,3): warning C4033: 'parse_date' must return a value
+C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\core.c(437,40): warning C4244: '=': conversion from '__int64' to 'int', possible loss of data
+C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\core.c(442,39): warning C4244: '=': conversion from '__int64' to 'int', possible loss of data
+C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\core.c(447,40): warning C4244: '=': conversion from '__int64' to 'int', possible loss of data
+C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\core.c(601,1): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
+C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\core.c(607,1): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
+C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\core.c(457): warning C4715: 'parse_date': not all control paths return a value
+C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\core.c(504): warning C4715: 'has_cable': not all control paths return a value
+  RDS-code.vcxproj -> C:\Users\horia\OneDrive\Desktop\school stuff\RDS\RDS-code\x64\Debug\RDS-code.exe

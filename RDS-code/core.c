@@ -1,5 +1,6 @@
 #include "core.h"
 
+
 void setup()
 {	
 	//checks if the folder exists
@@ -80,7 +81,7 @@ void get_people()
 	fgets(buffer, 256, file);
 	char name[41];
 	char first_name[41];
-	long cnp;
+	long long cnp;
 	while (fgets(buffer, 256, file))
 	{
 		char* tmp = get_field(buffer, 0);
@@ -96,7 +97,7 @@ void get_people()
 			free(tmp);
 		}
 		tmp = get_field(buffer, 2);
-		cnp = string_to_long(tmp);
+		cnp = string_to_llong(tmp);
 		if (tmp)
 		{
 			free(tmp);
@@ -199,7 +200,7 @@ void append_to_csv(char* filename, int argc, char* argv[])
 	fclose(file);
 }
 
-char* search_bills(long CNP)
+char* search_bills(long long CNP)
 {
 	FILE* file = fopen(BILLS, "r");
 	char* r = NULL;
@@ -210,7 +211,7 @@ char* search_bills(long CNP)
 		while (fgets(buffer, 256, file))
 		{
 			char* tmp = get_field(buffer, 4);
-			if (CNP == string_to_long(tmp))
+			if (CNP == string_to_llong(tmp))
 			{
 				if (r)
 				{
@@ -233,7 +234,7 @@ char* search_bills(long CNP)
 	return r;
 }
 
-int check_cnp(long CNP)
+int check_cnp(long long CNP)
 {
 	for (int i = 0; i < people_count; i++)
 	{
@@ -260,7 +261,7 @@ char* int_to_string(int x)
 	return r;
 }
 
-char* long_to_string(long x)
+char* llong_to_string(long long x)
 {
 	char buffer[21] = "";
 	while (x)
@@ -275,9 +276,9 @@ char* long_to_string(long x)
 	return r;
 }
 
-long string_to_long(char* string)
+long long string_to_llong(char* string)
 {
-	long res = 0;
+	long long res = 0;
 	for (int i = 0; string[i] != '\0' && string[i] != '\n'; i++)
 	{
 		res = res * 10 + (string[i] - '0');
@@ -352,10 +353,10 @@ void set_bill_data(char* bill_lines)
 			strcpy(address, ret_val);
 			free(ret_val);
 			ret_val = get_field(buffer, 6);
-			int sum = string_to_long(ret_val);
+			int sum = string_to_llong(ret_val);
 			free(ret_val);
 			ret_val = get_field(buffer, 4);
-			long cnp = string_to_long(ret_val);
+			long long cnp = string_to_llong(ret_val);
 			free(ret_val);
 			service_type type;
 			ret_val = get_field(buffer, 2);
@@ -382,10 +383,10 @@ char* get_full_csv_line(int number, char* filename)
 	FILE* file = fopen(filename, "r");
 	//fgets(buffer, 255, file);
 	int count = 0;
-	while (fgets(buffer, 255, file) && count <= number)
+	do
 	{
 		count++;
-	}
+	} while (fgets(buffer, 255, file) && count <= number);
 	if (count == number + 1)
 	{
 		r = (char*)malloc(strlen(buffer) + 1);
@@ -395,7 +396,7 @@ char* get_full_csv_line(int number, char* filename)
 	return NULL;
 }
 
-int does_client_exist(long cnp)
+int does_client_exist(long long cnp)
 {
 	FILE* file = fopen(CLIENTS, "r");
 	char* buffer[256];
@@ -403,7 +404,7 @@ int does_client_exist(long cnp)
 	while (fgets(buffer, 255, file))
 	{
 		char* tmp = get_field(buffer, 2);
-		if (cnp == string_to_long(tmp))
+		if (cnp == string_to_llong(tmp))
 		{
 			free(tmp);
 			return 1;
@@ -433,17 +434,17 @@ struct tm parse_date(char* in_string)
 		{
 		case 0:
 		{
-			res.tm_wday = string_to_long(token);
+			res.tm_wday = string_to_llong(token);
 			break;
 		}
 		case 1:
 		{
-			res.tm_mon = string_to_long(token);
+			res.tm_mon = string_to_llong(token);
 			break;
 		}
 		case 2:
 		{
-			res.tm_year = string_to_long(token);
+			res.tm_year = string_to_llong(token);
 			break;
 		}
 		default:
@@ -491,7 +492,7 @@ void free_bill_data()
 	bill_count = 0;
 }
 
-int has_cable(long cnp)
+int has_cable(long long cnp)
 {
 	for (int i = 0; i < bill_count; i++)
 	{
@@ -512,7 +513,7 @@ void map_phones()
 		while (fgets(buffer, 256, file))
 		{
 			char* tmp = get_field(buffer, 0);
-			long cnp = string_to_long(tmp);
+			long long cnp = string_to_llong(tmp);
 			free(tmp);
 			int cnp_index = has_phone(cnp);
 			if (cnp_index > -1)
@@ -538,7 +539,7 @@ void map_phones()
 	fclose(file);
 }
 
-int has_phone(long cnp)
+int has_phone(long long cnp)
 {
 	for (int i = 0; i < phone_count; i++)
 	{
@@ -568,7 +569,7 @@ char* get_config_property(char* key)
 	return NULL;
 }
 
-void add_person(char* name, char* first_name, long cnp)
+void add_person(char* name, char* first_name, long long cnp)
 {
 	if (people)
 	{
@@ -584,7 +585,7 @@ void add_person(char* name, char* first_name, long cnp)
 	}
 }
 
-void print_phone_contracts(long cnp)
+void print_phone_contracts(long long cnp)
 {
 	FILE* file = fopen(SUBSCRIPTIONS, "r");
 	char buffer[128];
@@ -592,27 +593,34 @@ void print_phone_contracts(long cnp)
 	fgets(buffer, 127, file);
 	int i = 0;
 	char** numbers = get_phone_numbers(cnp);
-	while (fgets(buffer, 127, file))
-	{		
-		char* tmp = get_field(buffer, 0);
-		if (cnp == string_to_long(tmp))
-		{			
-			free(tmp);
-			tmp = get_field(buffer, 1);
-			int index = string_to_long(tmp);
-			free(tmp);
-			tmp = get_full_csv_line(index + 1, TEMPLATES);
-			printf("%sNumar de telefon: %s", tmp, numbers[i]);
-			free(numbers[i]);
-			i++;
-			free(tmp);
+	if (numbers) {
+		while (fgets(buffer, 127, file))
+		{
+			char* tmp = get_field(buffer, 0);
+			char* type = get_field(buffer, 1);
+			int t = string_to_llong(type);
+			free(type);
+			if (cnp == string_to_llong(tmp) && t / 5 == 0)
+			{
+				free(tmp);
+				tmp = get_field(buffer, 1);
+				int index = string_to_llong(tmp);
+				free(tmp);
+				tmp = get_full_csv_line(t, TEMPLATES);
+				printf("%sNumar de telefon: %s", tmp, numbers[i]);
+				free(numbers[i]);
+				i++;
+				free(tmp);
+			}
 		}
 	}
+	else
+		printf("Nu s-au gasit numere de telefon pentru acest client.\n");
 	free(numbers);
 	fclose(file);
 }
 
-char** get_phone_numbers(long cnp)
+char** get_phone_numbers(long long cnp)
 {
 	char** numbers = NULL;
 	int i = 0;
@@ -622,7 +630,7 @@ char** get_phone_numbers(long cnp)
 	while (fgets(buffer, 127, file))
 	{
 		char* tmp = get_field(buffer, 0);
-		if (cnp == string_to_long(tmp))
+		if (cnp == string_to_llong(tmp))
 		{
 			free(tmp);
 			if (i)
@@ -641,6 +649,41 @@ char** get_phone_numbers(long cnp)
 		}
 	}
 	return numbers;
+}
+
+struct tm get_date()
+{
+	time_t t = time(NULL);
+	struct tm tm = *localtime(&t);
+	tm.tm_year += 1900;
+	tm.tm_mon++;
+	return tm;
+}
+
+char* get_date_string(struct tm date)
+{
+	char* res = malloc(11);
+	strcpy(res, "");
+	if (date.tm_mday < 10)
+	{
+		strcat(res, "0");
+	}	
+	char* tmp = int_to_string(date.tm_mday);
+	strcat(res, tmp);
+	free(tmp);
+	strcat(res, "/");
+	if (date.tm_mon < 10)
+	{
+		strcat(res, "0");
+	}
+	tmp = int_to_string(date.tm_mon);
+	strcat(res, tmp);
+	free(tmp);
+	strcat(res, "/");
+	tmp = int_to_string(date.tm_year);
+	strcat(res, tmp);
+	free(tmp);
+	return res;
 }
 
 char* get_field(char* line, int num)

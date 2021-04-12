@@ -8,7 +8,7 @@ void createcontract()
 	select_service(&option);
 	select_type(&option);
 	select_years(&option);
-	long cnp;
+	long long cnp;
 	char* name = NULL;
 	char* first_name = NULL;
 	char* address = NULL;
@@ -63,11 +63,11 @@ void select_years(contract* con)
 	else
 		con->years = 2;
 }
-void read_cnp(long* cnp)
+void read_cnp(long long* cnp)
 {
 	clear_console();
 	printf("Introduceti CNP-ul: ");
-	scanf("%ld", cnp);
+	scanf("%lld", cnp);
 
 }
 
@@ -77,7 +77,8 @@ char* read_name()
 	char buffer[40];
 	clear_console();
 	printf("Introduceti numele: ");
-	scanf("%s", buffer);
+	getchar();
+	gets(buffer, 39);
 	name = (char*)malloc(strlen(buffer) + 1);
 	strcpy(name, buffer);
 	return name;
@@ -89,7 +90,7 @@ char* read_first_name()
 	char buffer[40];
 	clear_console();
 	printf("Introduceti prenumele: ");
-	scanf("%s", buffer);
+	gets(buffer, 39);
 	first_name = (char*)malloc(strlen(buffer) + 1);
 	strcpy(first_name, buffer);
 	return first_name;
@@ -101,19 +102,19 @@ char* read_address()
 	char buffer[40];
 	clear_console();
 	printf("Introduceti adresa: ");
-	scanf("%s", buffer);
+	gets(buffer,39);
 	address = (char*)malloc(strlen(buffer) + 1);
 	strcpy(address, buffer);
 	return address;
 }
 
-int confirm_data(contract con, long cnp, char* name, char* first_name, char* address)
+int confirm_data(contract con, long long cnp, char* name, char* first_name, char* address)
 {
 	clear_console();
 	printf("Sunt corecte datele acestea?\n");
 	printf("Nume: %s\n", name);
 	printf("Prenume: %s\n", first_name);
-	printf("CNP: %ld\n", cnp);
+	printf("CNP: %lld\n", cnp);
 	printf("Adresa: %s\n", address);
 	if (con.service == Phone) {
 		printf("Tipul serviciului: Telefonie\n");
@@ -138,7 +139,7 @@ int confirm_data(contract con, long cnp, char* name, char* first_name, char* add
 	return option;
 }
 
-void submit_data(contract option, long cnp, char* name, char* first_name, char* address)
+void submit_data(contract option, long long cnp, char* name, char* first_name, char* address)
 {
 	int sub_index = 1;
 	if (option.service == Cable)
@@ -155,26 +156,44 @@ void submit_data(contract option, long cnp, char* name, char* first_name, char* 
 	}
 	if (!does_client_exist(cnp))
 	{
+		//adds client to database
 		char* columns[4];
 		columns[0] = name;
 		columns[1] = first_name;
-		columns[2] = long_to_string(cnp);
+		columns[2] = llong_to_string(cnp);
 		columns[3] = address;
 		add_person(name, first_name, cnp);
 		append_to_csv(CLIENTS, 4, columns);		
 		free(columns[2]);
 	}
-	
-	char* columns[2];
-	columns[0] = long_to_string(cnp);
+	char* columns[7];
+	columns[0] = name;
+	columns[1] = first_name;
+	if (option.service == Cable) 
+	{
+		columns[2] = "Televiziune";
+	}
+	else
+	{
+		columns[2] = "Telefon";
+	}
+	columns[3] = address;
+	columns[4] = llong_to_string(cnp);
+	columns[5] = get_date_string(get_date());
+	columns[6] = int_to_string(5 * (option.type + 1));
+	append_to_csv(BILLS, 7, columns);
+	//freeing memory that we'll reuse
+	//appends stuff to abonamente.csv
+	columns[0] = columns[4];
 	columns[1] = int_to_string(sub_index);
 	append_to_csv(SUBSCRIPTIONS, 2, columns);
 	free(columns[1]);
 	if (option.service == Phone)
 	{
+		//this only happens if the subscription is for a phone number
 		map_phones();
 		char* tmp = get_config_property("current_number");
-		int suffix = string_to_long(tmp);
+		int suffix = string_to_llong(tmp);
 		char number[11] = "07";
 		strcat(number, tmp);
 		columns[1] = number;
@@ -193,6 +212,9 @@ void submit_data(contract option, long cnp, char* name, char* first_name, char* 
 		fclose(conf);
 		free(tmp);
 	}
+	free(columns[0]);
+	free(columns[5]);
+	free(columns[6]);
 	free(name);
 	free(first_name);
 	free(address);

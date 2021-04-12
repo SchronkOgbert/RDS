@@ -62,6 +62,8 @@ void print_file_content(char* filename);
 void add_person(char* name, char* first_name, long cnp);
 void print_phone_contracts(long cnp);
 char** get_phone_numbers(long cnp);
+struct tm get_date();
+char* get_date_string(struct tm date);
 
 //low-level stuff functions
 void delete_string_array(int elc, char* v[]);

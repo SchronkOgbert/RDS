@@ -643,6 +643,41 @@ char** get_phone_numbers(long cnp)
 	return numbers;
 }
 
+struct tm get_date()
+{
+	time_t t = time(NULL);
+	struct tm tm = *localtime(&t);
+	tm.tm_year += 1900;
+	tm.tm_mon++;
+	return tm;
+}
+
+char* get_date_string(struct tm date)
+{
+	char* res = malloc(11);
+	strcpy(res, "");
+	if (date.tm_mday < 10)
+	{
+		strcat(res, "0");
+	}	
+	char* tmp = int_to_string(date.tm_mday);
+	strcat(res, tmp);
+	free(tmp);
+	strcat(res, "/");
+	if (date.tm_mon < 10)
+	{
+		strcat(res, "0");
+	}
+	tmp = int_to_string(date.tm_mon);
+	strcat(res, tmp);
+	free(tmp);
+	strcat(res, "/");
+	tmp = int_to_string(date.tm_year);
+	strcat(res, tmp);
+	free(tmp);
+	return res;
+}
+
 char* get_field(char* line, int num)
 {
 	char buffer[256];

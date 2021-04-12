@@ -155,6 +155,7 @@ void submit_data(contract option, long cnp, char* name, char* first_name, char* 
 	}
 	if (!does_client_exist(cnp))
 	{
+		//adds client to database
 		char* columns[4];
 		columns[0] = name;
 		columns[1] = first_name;
@@ -164,14 +165,31 @@ void submit_data(contract option, long cnp, char* name, char* first_name, char* 
 		append_to_csv(CLIENTS, 4, columns);		
 		free(columns[2]);
 	}
-	
-	char* columns[2];
-	columns[0] = long_to_string(cnp);
+	char* columns[7];
+	columns[0] = name;
+	columns[1] = first_name;
+	if (option.service == Cable) 
+	{
+		columns[2] = "Televiziune";
+	}
+	else
+	{
+		columns[2] = "Telefon";
+	}
+	columns[3] = address;
+	columns[4] = long_to_string(cnp);
+	columns[5] = get_date_string(get_date());
+	columns[6] = int_to_string(5 * (option.type + 1));
+	append_to_csv(BILLS, 7, columns);
+	//freeing memory that we'll reuse
+	//appends stuff to abonamente.csv
+	columns[0] = columns[4];
 	columns[1] = int_to_string(sub_index);
 	append_to_csv(SUBSCRIPTIONS, 2, columns);
 	free(columns[1]);
 	if (option.service == Phone)
 	{
+		//this only happens if the subscription is for a phone number
 		map_phones();
 		char* tmp = get_config_property("current_number");
 		int suffix = string_to_long(tmp);
@@ -193,6 +211,9 @@ void submit_data(contract option, long cnp, char* name, char* first_name, char* 
 		fclose(conf);
 		free(tmp);
 	}
+	free(columns[0]);
+	free(columns[5]);
+	free(columns[6]);
 	free(name);
 	free(first_name);
 	free(address);

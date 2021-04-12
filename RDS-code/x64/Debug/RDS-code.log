@@ -1,5 +1,2 @@
-﻿  contract.c
-D:\GitKraken\RDS\RDS-code\contract.c(165,24): warning C4133: 'function': incompatible types - from 'char [15]' to 'FILE *'
-D:\GitKraken\RDS\RDS-code\contract.c(172,29): warning C4133: 'function': incompatible types - from 'char [26]' to 'FILE *'
-D:\GitKraken\RDS\RDS-code\contract.c(182,23): warning C4133: 'function': incompatible types - from 'char [17]' to 'FILE *'
+﻿  main.c
   RDS-code.vcxproj -> D:\GitKraken\RDS\RDS-code\x64\Debug\RDS-code.exe

@@ -102,7 +102,7 @@ char* read_address()
 	char buffer[40];
 	clear_console();
 	printf("Introduceti adresa: ");
-	scanf("%s", buffer);
+	gets(buffer,39);
 	address = (char*)malloc(strlen(buffer) + 1);
 	strcpy(address, buffer);
 	return address;

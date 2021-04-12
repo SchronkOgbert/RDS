@@ -30,7 +30,7 @@ void set_person_cnp(person* pers, long long cnp)
 
 void print_person(person* pers)
 {
-	printf("%s %s %ld\n", pers->name, pers->first_name, pers->cnp);
+	printf("%s %s %lld\n", pers->name, pers->first_name, pers->cnp);
 }
 
 bill* bill_init(char* name, char* first_name, char* address, service_type service, long long cnp, struct tm date, int sum)

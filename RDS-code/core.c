@@ -1,5 +1,6 @@
 #include "core.h"
 
+
 void setup()
 {	
 	//checks if the folder exists
@@ -80,7 +81,7 @@ void get_people()
 	fgets(buffer, 256, file);
 	char name[41];
 	char first_name[41];
-	long cnp;
+	long long cnp;
 	while (fgets(buffer, 256, file))
 	{
 		char* tmp = get_field(buffer, 0);
@@ -199,7 +200,7 @@ void append_to_csv(char* filename, int argc, char* argv[])
 	fclose(file);
 }
 
-char* search_bills(long CNP)
+char* search_bills(long long CNP)
 {
 	FILE* file = fopen(BILLS, "r");
 	char* r = NULL;
@@ -233,7 +234,7 @@ char* search_bills(long CNP)
 	return r;
 }
 
-int check_cnp(long CNP)
+int check_cnp(long long CNP)
 {
 	for (int i = 0; i < people_count; i++)
 	{
@@ -355,7 +356,7 @@ void set_bill_data(char* bill_lines)
 			int sum = string_to_llong(ret_val);
 			free(ret_val);
 			ret_val = get_field(buffer, 4);
-			long cnp = string_to_llong(ret_val);
+			long long cnp = string_to_llong(ret_val);
 			free(ret_val);
 			service_type type;
 			ret_val = get_field(buffer, 2);
@@ -382,10 +383,10 @@ char* get_full_csv_line(int number, char* filename)
 	FILE* file = fopen(filename, "r");
 	//fgets(buffer, 255, file);
 	int count = 0;
-	while (fgets(buffer, 255, file) && count <= number)
+	do
 	{
 		count++;
-	}
+	} while (fgets(buffer, 255, file) && count <= number);
 	if (count == number + 1)
 	{
 		r = (char*)malloc(strlen(buffer) + 1);
@@ -395,7 +396,7 @@ char* get_full_csv_line(int number, char* filename)
 	return NULL;
 }
 
-int does_client_exist(long cnp)
+int does_client_exist(long long cnp)
 {
 	FILE* file = fopen(CLIENTS, "r");
 	char* buffer[256];
@@ -491,7 +492,7 @@ void free_bill_data()
 	bill_count = 0;
 }
 
-int has_cable(long cnp)
+int has_cable(long long cnp)
 {
 	for (int i = 0; i < bill_count; i++)
 	{
@@ -512,7 +513,7 @@ void map_phones()
 		while (fgets(buffer, 256, file))
 		{
 			char* tmp = get_field(buffer, 0);
-			long cnp = string_to_llong(tmp);
+			long long cnp = string_to_llong(tmp);
 			free(tmp);
 			int cnp_index = has_phone(cnp);
 			if (cnp_index > -1)
@@ -538,7 +539,7 @@ void map_phones()
 	fclose(file);
 }
 
-int has_phone(long cnp)
+int has_phone(long long cnp)
 {
 	for (int i = 0; i < phone_count; i++)
 	{
@@ -568,7 +569,7 @@ char* get_config_property(char* key)
 	return NULL;
 }
 
-void add_person(char* name, char* first_name, long cnp)
+void add_person(char* name, char* first_name, long long cnp)
 {
 	if (people)
 	{
@@ -584,7 +585,7 @@ void add_person(char* name, char* first_name, long cnp)
 	}
 }
 
-void print_phone_contracts(long cnp)
+void print_phone_contracts(long long cnp)
 {
 	FILE* file = fopen(SUBSCRIPTIONS, "r");
 	char buffer[128];
@@ -592,27 +593,34 @@ void print_phone_contracts(long cnp)
 	fgets(buffer, 127, file);
 	int i = 0;
 	char** numbers = get_phone_numbers(cnp);
-	while (fgets(buffer, 127, file))
-	{		
-		char* tmp = get_field(buffer, 0);
-		if (cnp == string_to_llong(tmp))
-		{			
-			free(tmp);
-			tmp = get_field(buffer, 1);
-			int index = string_to_llong(tmp);
-			free(tmp);
-			tmp = get_full_csv_line(index + 1, TEMPLATES);
-			printf("%sNumar de telefon: %s", tmp, numbers[i]);
-			free(numbers[i]);
-			i++;
-			free(tmp);
+	if (numbers) {
+		while (fgets(buffer, 127, file))
+		{
+			char* tmp = get_field(buffer, 0);
+			char* type = get_field(buffer, 1);
+			int t = string_to_llong(type);
+			free(type);
+			if (cnp == string_to_llong(tmp) && t / 5 == 0)
+			{
+				free(tmp);
+				tmp = get_field(buffer, 1);
+				int index = string_to_llong(tmp);
+				free(tmp);
+				tmp = get_full_csv_line(t, TEMPLATES);
+				printf("%sNumar de telefon: %s", tmp, numbers[i]);
+				free(numbers[i]);
+				i++;
+				free(tmp);
+			}
 		}
 	}
+	else
+		printf("Nu s-au gasit numere de telefon pentru acest client.\n");
 	free(numbers);
 	fclose(file);
 }
 
-char** get_phone_numbers(long cnp)
+char** get_phone_numbers(long long cnp)
 {
 	char** numbers = NULL;
 	int i = 0;

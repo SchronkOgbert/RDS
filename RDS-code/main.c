@@ -99,10 +99,13 @@ void printclient()
 	for (int i = 0; i < people_count; i++)
 	{
 		set_bill_data(search_bills(people[i]->cnp));
+		int sum = 0;
 		for (int j = 0; j < bill_count; j++)
 		{
-			printf("%s %s: %s, %d\n", bill_data[j]->name, bill_data[j]->first_name, bill_data[j]->address, bill_data[j]->sum);
+			sum += bill_data[j]->sum;
 		}
+		if(bill_data)
+			printf("%s %s: %s, %d\n", bill_data[0]->name, bill_data[0]->first_name, bill_data[0]->address, sum);
 	}
 	
 }

@@ -64,6 +64,7 @@ void print_phone_contracts(long long cnp);
 char** get_phone_numbers(long long cnp);
 struct tm get_date();
 char* get_date_string(struct tm date);
+void add_phone_to_map(long long cnp);
 
 //low-level stuff functions
 void delete_string_array(int elc, char* v[]);

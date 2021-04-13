@@ -733,3 +733,22 @@ void print_file_content(char* filename)
 	}	
 	fclose(file);
 }
+
+void add_phone_to_map(long long cnp)
+{
+	int found = 0;
+	for (int i = 0; i < phone_count; i++)
+	{
+		found = (phones[i]->cnp == cnp);		
+		if (found)
+		{
+			phones[i]->number++;
+			break;
+		}
+	}
+	if (!found)
+	{
+		phones = (phone**)realloc(phones, sizeof(phone*) * ++phone_count);
+		phones[phone_count - 1] = init_phone(cnp, 1);
+	}
+}

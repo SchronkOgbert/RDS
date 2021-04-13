@@ -191,7 +191,7 @@ void submit_data(contract option, long long cnp, char* name, char* first_name, c
 	if (option.service == Phone)
 	{
 		//this only happens if the subscription is for a phone number
-		map_phones();
+		add_phone_to_map(cnp);
 		char* tmp = get_config_property("current_number");
 		int suffix = string_to_llong(tmp);
 		char number[11] = "07";

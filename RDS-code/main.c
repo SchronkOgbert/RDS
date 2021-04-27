@@ -20,7 +20,7 @@ int main()
 
 	startmsg();
 
-	while (option < 6 || option == 10)
+	while ((option > 0 && option < 6) || option == 10)
 	{
 		switch (option)
 		{

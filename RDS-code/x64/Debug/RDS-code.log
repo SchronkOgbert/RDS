@@ -1,4 +1,11 @@
-﻿  core.c
+﻿  contract.c
+J:\VSProjects\RDS\RDS-code\contract.c(81,6): warning C4013: 'gets' undefined; assuming extern returning int
+J:\VSProjects\RDS\RDS-code\contract.c(166,24): warning C4133: 'function': incompatible types - from 'char [15]' to 'FILE *'
+J:\VSProjects\RDS\RDS-code\contract.c(184,21): warning C4133: 'function': incompatible types - from 'char [15]' to 'FILE *'
+J:\VSProjects\RDS\RDS-code\contract.c(189,29): warning C4133: 'function': incompatible types - from 'char [26]' to 'FILE *'
+J:\VSProjects\RDS\RDS-code\contract.c(200,23): warning C4133: 'function': incompatible types - from 'char [17]' to 'FILE *'
+J:\VSProjects\RDS\RDS-code\contract.c(196,1): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
+  core.c
 J:\VSProjects\RDS\RDS-code\core.c(20,15): warning C4013: 'mkdir' undefined; assuming extern returning int
 J:\VSProjects\RDS\RDS-code\core.c(184,26): warning C4028: formal parameter 1 different from declaration
 J:\VSProjects\RDS\RDS-code\core.c(356,1): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
@@ -14,6 +21,10 @@ J:\VSProjects\RDS\RDS-code\core.c(442,39): warning C4244: '=': conversion from '
 J:\VSProjects\RDS\RDS-code\core.c(447,40): warning C4244: '=': conversion from '__int64' to 'int', possible loss of data
 J:\VSProjects\RDS\RDS-code\core.c(601,1): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
 J:\VSProjects\RDS\RDS-code\core.c(607,1): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
+  main.c
+  objects.c
+  Generating Code...
+J:\VSProjects\RDS\RDS-code\objects.c(95): warning C4716: 'init_phone': must return a value
 J:\VSProjects\RDS\RDS-code\core.c(457): warning C4715: 'parse_date': not all control paths return a value
 J:\VSProjects\RDS\RDS-code\core.c(504): warning C4715: 'has_cable': not all control paths return a value
   RDS-code.vcxproj -> J:\VSProjects\RDS\RDS-code\x64\Debug\RDS-code.exe

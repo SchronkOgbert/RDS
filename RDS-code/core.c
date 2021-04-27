@@ -730,8 +730,7 @@ void print_file_content(char* filename)
 	else
 	{
 		printf("Nu exista fisierul solicitat\n");
-	}	
-	fclose(file);
+	}
 }
 
 void add_phone_to_map(long long cnp)
